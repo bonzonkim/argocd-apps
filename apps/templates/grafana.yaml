@@ -9,7 +9,7 @@ spec:
   project: default
   destination:
     server: {{ .Values.spec.destination.server }}
-    namespace: argocd
+    namespace: monitoring
   source:
     repoURL: https://grafana.github.io/helm-charts
     targetRevision: 8.4.4
@@ -20,4 +20,4 @@ spec:
       values: |
         {{- $files.Get "conf/grafana.yaml" | nindent 12 }}
   syncPolicy:
-    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
+    {{- toYaml .Values.argocd.syncPolicy | nindent 8 }}
