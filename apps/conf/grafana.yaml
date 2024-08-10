@@ -1,0 +1,7 @@
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  hosts:
+    - grafana.k8s.bumgu.com
+  tls:
+    - secretName: k8s-bumgu-com-tls

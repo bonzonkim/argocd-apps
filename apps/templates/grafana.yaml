@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: argocd
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 8.4.4
+    chart: grafana
+    helm:
+      releaseName: grafana
+      {{- $files := .Files }}
+      values: |
+        {{- $files.Get "conf/grafana.yaml" | nindent 12 }}
+  syncPolicy:
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
