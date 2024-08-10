@@ -9,7 +9,7 @@ spec:
     server: {{ .Values.spec.destination.server }}
   source:
     path: bootstrap
-    repoURL: https://github.com/minuchi/argocd-apps
+    repoURL: https://github.com/bonzonkim/argocd-apps
     targetRevision: main
   syncPolicy:
     {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}

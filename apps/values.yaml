@@ -2,7 +2,7 @@ spec:
   destination:
     server: https://kubernetes.default.svc
   source:
-    repoURL: https://github.com/minuchi/argocd-apps
+    repoURL: https://github.com/bonzonkim/argocd-apps
     targetRevision: HEAD
 argocd:
   syncPolicy:

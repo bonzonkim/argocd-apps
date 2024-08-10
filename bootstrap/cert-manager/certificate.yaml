@@ -1,9 +1,9 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: k8s-minwoo-kim
+  name: k8s-bumgu-com
 spec:
-  secretName: k8s-minwoo-kim-tls
+  secretName: k8s-bumgu-com-tls
   secretTemplate:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
@@ -11,7 +11,7 @@ spec:
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
-  commonName: "k8s.minwoo.kim"
+  commonName: "k8s.bumgu.com"
   dnsNames:
-    - "k8s.minwoo.kim"
-    - "*.k8s.minwoo.kim"
+    - "k8s.bumgu.com"
+    - "*.k8s.bumgu.com"

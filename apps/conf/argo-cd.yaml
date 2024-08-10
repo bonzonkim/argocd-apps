@@ -1,5 +1,5 @@
 global:
-  domain: argocd.k8s.minwoo.kim
+  domain: argocd.k8s.bumgu.com
 configs:
   params:
     server.insecure: true
@@ -10,5 +10,5 @@ server:
     ingressClassName: traefik
     extraTls:
       - hosts:
-          - argocd.k8s.minwoo.kim
-        secretName: k8s-minwoo-kim-tls
+          - argocd.k8s.bumgu.com
+        secretName: k8s-bumgu-com-tls
