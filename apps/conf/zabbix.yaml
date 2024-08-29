@@ -15,4 +15,6 @@ ingress:
     - zabbix.k8s.bumgu.com
   tls:
     - secretName: k8s-bumgu-com-tls
+      hosts:
+        - zabbix.k8s.bumgu.com
       ingressClassName: traefik
