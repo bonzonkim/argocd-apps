@@ -12,7 +12,7 @@ zabbixServer:
 ingress: 
   enabled: true
   hosts:
-    - zabbix.k8s.bumgu.com
+    - host: zabbix.k8s.bumgu.com
   tls:
     - secretName: k8s-bumgu-com-tls
       hosts:
