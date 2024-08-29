@@ -21,4 +21,4 @@ spec:
       values: |
         {{- $files.Get "conf/zabbix.yaml" | nindent 12 }}
   syncPolicy:
-    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
+    {{- toYaml .Values.argocd.SyncPolicy | nindent 8 }}
