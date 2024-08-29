@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: zabbix
+  namespace: zabbix
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: zabbix
+  source:
+    repoURL: https://zabbix-community.github.io/helm-zabbix
+    # NOTE: since version 5.0.0 zabbix version upgraded to 7 from 6 
+    targetRevision: 5.0.1
+    chart: zabbix
+    helm:
+      releaseName: zabbix
+      {{- $files := .Files }}
+      values: |
+        {{- $files.Get "conf/zabbix.yaml" | nindent 12 }}
+  syncPolicy:
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}

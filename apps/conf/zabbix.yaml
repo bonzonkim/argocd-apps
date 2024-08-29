@@ -1,0 +1,18 @@
+zabbixImageTag: ubuntu-7.0.0
+postgresAccess:
+  password: "egarreo01"
+
+zabbixServer:
+  extraEnv:
+    - ZBX_CACHE_SIZE: "128M"
+    - ZBX_VALUECACHESIZE: "128M"
+    - ZBX_STARTPOLLERS: 10
+    - ZBX_STARTPOLLERSUNREACHABLE: 10
+
+ingress: 
+  enabled: true
+  hosts:
+    - zabbix.k8s.bumgu.com
+  tls:
+    - secretName: k8s-bumgu-com-tls
+      ingressClassName: nginx
