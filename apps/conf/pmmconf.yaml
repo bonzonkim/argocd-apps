@@ -1,0 +1,44 @@
+secret:
+  name: pmm-secret
+  create: true
+  pmm_password: "egarreo01"
+
+
+## @section PMM network configuration
+## Service configuration
+##
+service:
+  name: pmm-service
+  type: ClusterIP
+## Ingress controller configuration
+##
+ingress:
+  enabled: true
+  nginxInc: false
+  community:
+    annotations: 
+       kubernetes.io/ingress.class: traefik
+  ingressClassName: "traefik"
+  hosts:
+    - host: pmm.k8s.bumgu.com
+  tls: 
+    - secretName: pmm-k8s-bumgu-com
+      hosts:
+        - pmm.k8s.bumgu.com
+
+## @section PMM storage configuration
+## Claiming storage for PMM using Persistent Volume Claims (PVC)
+## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+storage:
+  ## @param storage.name name of PVC
+  name: pmm-storage
+  ## @param storage.storageClassName optional PMM data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClassName: ""
+  size: 10Gi

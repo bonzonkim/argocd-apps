@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pmm
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: pmm
+  source:
+    repoURL: https://percona.github.io/percona-helm-charts/
+    # NOTE: since version 5.0.0 zabbix version upgraded to 7 from 6 
+    targetRevision: 1.3.14
+    chart: pmm
+    helm:
+      releaseName: pmm
+      {{- $files := .Files }}
+      values: |
+        {{- $files.Get "conf/pmm.yaml" | nindent 12 }}
+  syncPolicy:
+    {{- toYaml .Values.argocd.SyncPolicy | nindent 8 }}
