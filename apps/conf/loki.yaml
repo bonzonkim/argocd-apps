@@ -1,0 +1,121 @@
+deploymentMode: Distributed
+global:
+  dnsService: "coredns"
+loki:
+  schemaConfig:
+    configs:
+      - from: "2024-11-08"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 3
+  limits_config:
+    max_cache_freshness_per_query: 10m
+  ingester:
+    chunk_encoding: snappy
+  storage:
+    bucketNames:
+      chunks: loki-chunks
+      ruler: ruler-chunks
+      admin: admin-chunks
+    type: s3
+    s3:
+      s3: "s3://bumgu:supersecret@minio.k8s.bumgu.com/loki-chunks"
+      endpoint: minio.k8s.bumgu.com
+      secretAccessKey: "supersecret"
+      accessKeyId: "bumgu"
+      s3ForcePathStyle: true
+      insecure: true
+      signatureVersion: v4 
+  storage_config:
+    tsdb_shipper:
+      active_index_directory: /var/loki/tsdb-index
+      cache_location: /var/loki/tsdb-cache
+
+
+distributor:
+  replicas: 3
+  maxUnavailable: 1
+  ring:
+    kvstore:
+      store: memberlist
+ingester:
+  replicas: 3
+  maxUnavailable: 1
+  lifecycler:
+    ring:
+      kvstore:
+        store: memberlist
+      replication_factor: 3
+querier:
+  replicas: 2
+  maxUnavailable: 1
+query-frontend:
+  replicas: 2
+  maxUnavailable: 1
+compactor:
+  replicas: 2
+  maxUnavailable: 1
+indexGateway:
+  replicas: 2
+  maxUnavailable: 1
+ruler:
+  replicas: 2
+  maxUnavailable: 1
+  storage:
+    type: s3
+    s3:
+      endpoint: minio.k8s.bumgu.com
+      bucketnames:
+        ruler: "loki-ruler"
+      access_key_id: "bumgu"
+      secret_access_key: "supersecret"
+memberlist:
+  join_members:
+    - "loki-memberlist:7946"
+
+minio:
+  enabled: true
+  replicas: 1
+  drivesPerNode: 2
+  rootUser: "bumgu"
+  rootPassword: "supersecret"
+  buckets:
+    - name: chunks
+      policy: none
+      purge: false
+    - name: ruler
+      policy: none
+      purge: false
+    - name: admin
+      policy: none
+      purge: false
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: 500m
+
+
+###### Disabled components ######
+bloomCompactor:
+    replicas: 0
+bloomGateway:
+  replicas: 0
+
+backend:
+  replicas: 0
+read:
+  replicas: 0
+write:
+  replicas: 0
+
+singleBinary:
+  replicas: 0
