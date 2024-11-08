@@ -1,6 +1,4 @@
 deploymentMode: Distributed
-global:
-  dnsService: "coredns"
 loki:
   schemaConfig:
     configs:
