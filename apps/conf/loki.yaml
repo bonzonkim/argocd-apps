@@ -44,12 +44,11 @@ distributor:
       store: memberlist
 ingester:
   replicas: 1
-  
   lifecycler:
     ring:
       kvstore:
         store: memberlist
-      replication_factor: 3
+      replication_factor: 1
 querier:
   replicas: 1
   
