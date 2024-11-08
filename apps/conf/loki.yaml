@@ -48,7 +48,6 @@ ingester:
     ring:
       kvstore:
         store: memberlist
-      replication_factor: 1
 querier:
   replicas: 1
   
