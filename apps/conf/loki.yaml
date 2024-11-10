@@ -93,6 +93,9 @@ minio:
       policy: none
       purge: false
 
+##### ingester zone #####
+zoneAwareReplication:
+  enabled: false
 
 ###### Disabled components ######
 bloomCompactor:
