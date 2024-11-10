@@ -1,0 +1,3 @@
+resources:
+  - loki-minio.yaml
+  - loki.yaml
