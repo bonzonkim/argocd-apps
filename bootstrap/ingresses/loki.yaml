@@ -1,12 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: lokfong-distributor-ingress
+  name: loki-distributor-ingress
   namespace: loki
   annotations:
-    kubernetes.io/ingress.class: nginx
+    kubernetes.io/ingress.class: traefik
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   tls:
     - hosts:
         - distributor.k8s.bumgu.com
@@ -19,6 +19,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: loki-loki-distributor
+                name: loki-distributor
                 port:
                   number: 3100
