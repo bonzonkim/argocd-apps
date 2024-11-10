@@ -48,7 +48,7 @@ ingester:
     ring:
       kvstore:
         store: memberlist
-  affinity: {}
+  affinity: null
 querier:
   replicas: 1
   
