@@ -20,7 +20,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: minio
+                name: loki-minio
                 port:
                   number: 9000
     - host: minio-console.k8s.bumgu.com
@@ -30,6 +30,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: minio-console
+                name: loki-minio-console
                 port:
                   number: 9001
