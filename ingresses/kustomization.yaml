@@ -1,3 +1,4 @@
 resources:
   - loki-minio.yaml
   - loki.yaml
+  - namespace.yaml
