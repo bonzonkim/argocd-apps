@@ -1,0 +1,31 @@
+apiVersion: application/v1
+kind: Deployment
+metadata:
+  name: hello-argo
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      label:
+        app: hello
+    spec:
+      containers:
+        - name: hello-argo
+          image: flrhyme9/hello-argo:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-argo-service
+  namespace: test
+spec:
+  selector:
+    app: hello
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP

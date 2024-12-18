@@ -1,0 +1,15 @@
+apiVerison: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-argo
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+  source:
+    path: test
+    repoURL: https://github.com/bonzonkim/argocd-apps
+    targetRevision: main
+  syncPolicy:
+    {{- toYaml .Values.arogcd.autoSyncPolicy | nindent 8 }}

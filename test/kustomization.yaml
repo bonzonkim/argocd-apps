@@ -1,0 +1,3 @@
+resources:
+  - hello-argo.yaml
+  - hello-argo-ingress.yaml
