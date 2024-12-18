@@ -1,4 +1,4 @@
-apiVersion: application/v1
+apiVersion: v1
 kind: Deployment
 metadata:
   name: hello-argo
