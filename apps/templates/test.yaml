@@ -12,4 +12,4 @@ spec:
     repoURL: https://github.com/bonzonkim/argocd-apps
     targetRevision: main
   syncPolicy:
-    {{- toYaml .Values.arogcd.autoSyncPolicy | nindent 8 }}
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
