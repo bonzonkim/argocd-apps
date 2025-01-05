@@ -11,9 +11,9 @@ spec:
     server: {{ .Values.spec.destination.server }}
     namespace: minio
   source:
-    repoURL: https://charts.bitnami.com/bitnami
+    repoURL: https://charts.bitnami.com/bitnami/
     targetRevision: 14.10.3
-    chart: bitnami/minio
+    chart: minio
     helm:
       releaseName: minio
       {{- $files := .Files }}
