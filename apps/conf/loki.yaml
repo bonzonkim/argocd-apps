@@ -138,7 +138,7 @@ minio:
   drivesPerNode: 2
   rootUser: "test"
   rootPassword: "testtest1234"
-  extraEnvVar:
+  extraEnvVars:
     - name: MINIO_PROMETHEUS_AUTH_TYPE
       value: public
   buckets:
