@@ -16,17 +16,17 @@ spec:
       containers:
         - name: minio
           image: bitnami/minio:2024.12.18
-      env:
-        - name: MINIO_ROOT_USER
-          valueFrom:
-            secretKeyRef:
-              key: rootUser
-              name: minio-cred
-        - name: MINIO_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: rootPassword
-              name: minio-cred
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  key: rootUser
+                  name: minio-cred
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: rootPassword
+                  name: minio-cred
       volumeMounts:
         - mountPath: /export-0
           name: export-0
