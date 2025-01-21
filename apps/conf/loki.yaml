@@ -69,8 +69,7 @@ distributor:
     kvstore:
       store: memberlist
 ingester:
-  replicas: 1
-  maxUnavailable: 1
+  replicas: 0
 querier:
   replicas: 1
   maxUnavailable: 1
