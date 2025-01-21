@@ -156,7 +156,8 @@ minio:
       memory: 1Gi
       cpu: 500m
   persistence:
-    enabled: false
+    enabled: true
+    size: 5Gi
   metrics:
     serviceMonitor:
       enabled: true
