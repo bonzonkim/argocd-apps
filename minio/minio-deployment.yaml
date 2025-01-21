@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  namespace: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: bitnami/minio:2024.12.18
+      env:
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: rootUser
+              name: minio-cred
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: rootPassword
+              name: minio-cred
+      volumeMounts:
+        - mountPath: /export-0
+          name: export-0
+        - mountPath: /export-1
+          name: export-1
+    volumes:
+    - name: export-0
+      persistentVolumeClaim:
+        claimName: export-0-minio-0
+    - name: export-1
+      persistentVolumeClaim:
+        claimName: export-1-minio-0

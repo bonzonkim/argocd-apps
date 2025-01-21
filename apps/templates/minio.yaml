@@ -3,21 +3,14 @@ kind: Application
 metadata:
   name: minio
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   destination:
     server: {{ .Values.spec.destination.server }}
     namespace: minio
   source:
-    repoURL: https://charts.bitnami.com/bitnami/minio
-    targetRevision: 14.10.5
-    chart: minio
-    helm:
-      releaseName: minio
-        {{- $files := .Files }}
-      values: |
-        {{- $files.Get "conf/minio-ind.yaml" | nindent 12 }}
+    path: minio
+    repoURL: https://github.com/bonzonkim/argocd-apps
+    targetRevision: main
   syncPolicy:
     {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
