@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: https://charts.bitnami.com/bitnami
     targetRevision: 14.10.5
-    chart: bitnami/minio
+    chart: minio
     helm:
       releaseName: minio
       {{- $files := .Files }}
