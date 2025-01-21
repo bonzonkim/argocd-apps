@@ -158,6 +158,7 @@ minio:
   persistence:
     enabled: true
     size: 5Gi
+    storageClass: ""
   metrics:
     serviceMonitor:
       enabled: true
