@@ -62,8 +62,8 @@ prometheus:
       requests:
         cpu: 500m
         memory: 1Gi
-    additionalScrapeConfigs:
-      - job_name:
+    #    additionalScrapeConfigs:
+    #      - job_name:
 
 crds:
   enabled: true
