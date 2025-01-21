@@ -137,7 +137,7 @@ minio:
   replicas: 1
   drivesPerNode: 2
   rootUser: "test"
-  rootPassword: "test"
+  rootPassword: "testtest1234"
   buckets:
     - name: chunks
       policy: none
