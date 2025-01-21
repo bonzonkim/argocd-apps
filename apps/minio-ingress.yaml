@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: minio-ingress
-  namespace: minio
+  namespace: lgtm
 spec:
   ingressClassName: traefik
   tls:
@@ -18,7 +18,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: my-minio
+                name: loki-minio-console
                 port:
                   number: 9001
     - host: minio-api.k8s.bumgu.com
@@ -28,6 +28,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: my-minio
+                name: loki-minio
                 port:
                   number: 9000

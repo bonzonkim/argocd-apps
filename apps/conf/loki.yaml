@@ -93,10 +93,7 @@ indexGateway:
   maxUnavailable: 1
   persistence:
     enabled: false
-<<<<<<< HEAD
-=======
     size: 10Gi
->>>>>>> 72da19a (fix: disabled index gateway persistence volume)
 ruler:
   replicas: 1
   maxUnavailable: 1
