@@ -63,8 +63,7 @@ prometheus:
         cpu: 500m
         memory: 1Gi
     additionalScrapeConfigs:
-      - job_name: minio-job-bucket
-        bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoidGVzdCIsImV4cCI6NDg5MTAyNzg3OX0._bP8pAvoZw5PV9T6UFGRPorIWX6sO28SoSDKEs31spip90moAR97GH5L1EvEItgOFgwyCCUFzyZ3eaR9FOQDpQ
+      - job_name: minio-job
         metrics_path: /minio/v2/metrics/bucket
         scheme: https
         static_configs:
