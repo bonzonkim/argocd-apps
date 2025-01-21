@@ -138,9 +138,6 @@ minio:
   drivesPerNode: 2
   rootUser: "test"
   rootPassword: "testtest1234"
-  extraEnvVars:
-    - name: MINIO_PROMETHEUS_AUTH_TYPE
-      value: public
   buckets:
     - name: chunks
       policy: none
@@ -162,18 +159,8 @@ minio:
     enabled: true
     size: 5Gi
     storageClass: ""
-  metrics:
-    serviceMonitor:
-      enabled: true
-      includeNode: false
-      public: true
-      additionalLabels: {}
-      annotations: {}
-      relabelConfigs: {}
-      relabelConfigsCluster: {}
-      namespace: lgtm
-      interval: 10s
-      scrapeTimeout: 10s
+  environments: 
+    MINIO_PROMETHEUS_AUTH_TYPE: public
 
 ###### Disabled components ######
 bloomCompactor:
