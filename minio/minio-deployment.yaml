@@ -27,15 +27,15 @@ spec:
                 secretKeyRef:
                   key: rootPassword
                   name: minio-cred
-      volumeMounts:
-        - mountPath: /export-0
-          name: export-0
-        - mountPath: /export-1
-          name: export-1
-    volumes:
-    - name: export-0
-      persistentVolumeClaim:
-        claimName: export-0-minio-0
-    - name: export-1
-      persistentVolumeClaim:
-        claimName: export-1-minio-0
+          volumeMounts:
+            - mountPath: /export-0
+              name: export-0
+            - mountPath: /export-1
+              name: export-1
+      volumes:
+      - name: export-0
+        persistentVolumeClaim:
+          claimName: export-0-minio-0
+      - name: export-1
+        persistentVolumeClaim:
+          claimName: export-1-minio-0

@@ -16,17 +16,17 @@ spec:
           - path: /
             pathType: Prefix
             backend:
-            service:
-              name: minio-console-service
-              port:
-                number: 9001
+              service:
+                name: minio-console-service
+                port:
+                  number: 9001
     - host: minio-test-api.k8s.bumgu.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
-            service:
-              name: minio-api-service
-              port:
-                number: 9000
+              service:
+                name: minio-api-service
+                port:
+                  number: 9000
