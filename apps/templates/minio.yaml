@@ -15,7 +15,7 @@ spec:
     targetRevision: 14.10.3
     chart: minio
     helm:
-      releaseName: minio
+      releaseName: bitnami/minio
       {{- $files := .Files }}
       values: |
         {{- $files.Get "conf/minio-ind.yaml" | nindent 12 }}
