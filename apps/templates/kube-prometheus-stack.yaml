@@ -20,11 +20,4 @@ spec:
       values: |
         {{- $files.Get "conf/kube-prometheus-stack.yaml" | nindent 12 }}
   syncPolicy:
-    automated: {}
-    syncOptions:
-      - Validate=false
-      - PrunePropagationPolicy=foreground
-      - PruneLast=true
-      - RespectIgnoreDifferences=true
-      - ApplyOutOfSyncOnly=true
-      - ServerSideApply=true
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
