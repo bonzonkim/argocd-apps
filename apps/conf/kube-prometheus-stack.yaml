@@ -65,6 +65,9 @@ prometheus:
     additionalScrapeConfigs:
       - job_name:
 
+crds:
+  enabled: true
+
 # -------------Alertmanager-------------
 alertmanager:
   namespace: prometheus
