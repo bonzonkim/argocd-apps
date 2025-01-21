@@ -63,13 +63,13 @@ prometheus:
         cpu: 500m
         memory: 1Gi
     additionalScrapeConfigs:
-      scrape_configs:
-        - job_name: minio-job-bucket
-          bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoic3RkIiwiZXhwIjo0ODkxMDI1MzYzfQ.B71Orsnd52-Ot_kG705Pf819PtIHYdu46A1kb8IA03sfnVYsDUc6Ar74r7l9hufgBxR3YynSayHgGWEbENavoQ
-          metrics_path: /minio/v2/metrics/bucket
-          scheme: https
-          static_configs:
-          - targets: [minio-api.k8s.bumgu.com]
+      - job_name: minio-job-bucket
+        bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoidGVzdCIsImV4cCI6NDg5MTAyNzg3OX0._bP8pAvoZw5PV9T6UFGRPorIWX6sO28SoSDKEs31spip90moAR97GH5L1EvEItgOFgwyCCUFzyZ3eaR9FOQDpQ
+        metrics_path: /minio/v2/metrics/bucket
+        scheme: https
+        static_configs:
+        - targets: [minio-api.k8s.bumgu.com]
+
 
 crds:
   enabled: true
