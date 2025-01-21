@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: minio
+  name: loki
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -9,15 +9,15 @@ spec:
   project: default
   destination:
     server: {{ .Values.spec.destination.server }}
-    namespace: minio
+    namespace: lgtm
   source:
-    repoURL: https://charts.bitnami.com/bitnami/
-    targetRevision: 14.10.3
-    chart: minio
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 6.22.0
+    chart: loki
     helm:
-      releaseName: minio
+      releaseName: loki
       {{- $files := .Files }}
       values: |
-        {{- $files.Get "conf/minio.yaml" | nindent 12 }}
+        {{- $files.Get "conf/loki.yaml" | nindent 12 }}
   syncPolicy:
-    {{- toYaml .Values.argocd.syncPolicy | nindent 8 }}
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}

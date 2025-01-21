@@ -1,0 +1,71 @@
+nameOverrides: "std-prometheus-stack"
+
+commonLabels:
+  mgmt: bumgu
+
+# -------------Global disabled-------------
+global:
+  kubeControllerManager:
+    enabled: false
+  kubeEtcd:
+    enabled: false
+  kubeScheduler:
+    enabled: false
+  kubeProxy:
+    enabled: false
+
+# -------------Grafana-------------
+grafana:
+  enabled: false
+# -------------Prometheus-------------
+prometheus:
+  namespace: prometheus
+  enabled: true
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: true
+    hosts:
+      - prom.k8s.bumgu.com
+    paths:
+      - /
+    tls:
+      - secretName: k8s-bumgu-com-tls
+        hosts:
+          - prom.k8s.bumgu.com
+
+  prometheusSpec:
+    externalUrl: https://prom.k8s.bumgu.com
+    routePrefix: /
+    # 서비스모니터 설정 -> 다른 네임스페이스에 있는 Service Monitor 사용을 위해 설정
+    # By default, Prometheus only discovers PodMonitors within its own namespace.
+    # This should be disabled by setting podMonitorSelectorNilUsesHelmValues to false
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    enableFeatures:
+      - remote-write-receiver
+    enableRemoteWriteReceiver: true
+    # 메트릭 스크랩
+    scrapeInterval: "30s"
+    scrapeTimeout: "15s"
+    evaluationInterval: "16s"
+    # 메트릭 보존 기간
+    retention: 7d
+    # 메트릭 최대 사이즈
+    retentionSize: "10GiB"
+    replicas: 1
+    # 리소스 설정
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
+    additionalScrapeConfigs:
+      - job_name:
+
+# -------------Alertmanager-------------
+alertmanager:
+  namespace: prometheus
+  enabled: false
