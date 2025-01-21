@@ -1,0 +1,24 @@
+auth:
+  rootUser: admin
+  rootPassword: root
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  hostname: minio-ind.k8s.bumgu.com
+  extraTls:
+    - hosts:
+      - minio-ind.k8s.bumgu.com
+      secretName: k8s-bumgu-com-tls
+apiIngress:
+  enabled: true
+  ingressClassName: traefik
+  hostname: minio-ind-api.k8s.bumgu.com
+  extraTls:
+    - hosts:
+      - minio-ind-api.k8s.bumgu.com
+      secretName: k8s-bumgu-com-tls
+
+ 
+tls:
+  enabled: true
+  existingSecret: k8s-bumgu-com-tls
