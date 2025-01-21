@@ -89,14 +89,9 @@ compactor:
     kvstore:
       store: memberlist
 indexGateway:
-  replicas: 1
-  maxUnavailable: 1
-  persistence:
-    enabled: false
-    size: 10Gi
+  replicas: 0
 ruler:
-  replicas: 1
-  maxUnavailable: 1
+  replicas: 0
   ring:
     kvstore:
       store: memberlist
