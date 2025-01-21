@@ -162,6 +162,18 @@ minio:
       cpu: 500m
   persistence:
     enabled: false
+  metrics:
+    serviceMonitor:
+      enabled: true
+      includeNode: false
+      public: true
+      additionalLabels: {}
+      annotations: {}
+      relabelConfigs: {}
+      relabelConfigsCluster: {}
+      namespace: lgtm
+      interval: 10s
+      scrapeTimeout: 10s
 
 ###### Disabled components ######
 bloomCompactor:
