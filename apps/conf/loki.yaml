@@ -92,9 +92,8 @@ indexGateway:
   replicas: 1
   maxUnavailable: 1
   persistence:
-    enabled: true
+    enabled: false
     size: 10Gi
-    storageClassName: "nfs"
 ruler:
   replicas: 1
   maxUnavailable: 1
