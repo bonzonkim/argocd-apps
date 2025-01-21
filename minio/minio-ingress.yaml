@@ -7,9 +7,8 @@ spec:
   ingressClassName: traefik
   tls:
   - hosts:
-      - hosts:
-          - minio-test-console.k8s.bumgu.com
-          - minio-test-api.k8s.bumgu.com
+      - minio-test-console.k8s.bumgu.com
+      - minio-test-api.k8s.bumgu.com
   rules:
     - host: minio-test-console.k8s.bumgu.com
       http:

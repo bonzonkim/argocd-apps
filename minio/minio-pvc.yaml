@@ -14,14 +14,13 @@ metadata:
     release: minio
   name: export-0-minio-0
   namespace: minio
-  uid: 0424345d-e1a3-4619-b5e4-aac534abdbc3
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
-  storageClassName: "rancher.io/local-path"
+  storageClassName: "local-path"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -39,11 +38,10 @@ metadata:
     release: minio
   name: export-1-minio-0
   namespace: minio
-  uid: 67e8cafc-ee4c-4c2d-a3e3-dfc891942fe0
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
-  storageClassName: "rancher.io/local-path"
+  storageClassName: "local-path"
