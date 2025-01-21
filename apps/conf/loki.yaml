@@ -30,11 +30,11 @@ loki:
       admin: admin-chunks
     type: s3
     s3:
-      s3: "http://loki:egarreo01@loki-minio.lgtm.svc.cluster.local:9000/chunks"
+      s3: "http://test:test@loki-minio.lgtm.svc.cluster.local:9000/chunks"
       endpoint: loki-minio.lgtm.svc.cluster.local:9000
-      secretAccessKey: egarreo01
+      secretAccessKey: test
       bucketnames: chunks
-      accessKeyId: std
+      accessKeyId: test
       s3ForcePathStyle: true
       insecure: true
       signatureVersion: v4
@@ -43,7 +43,7 @@ loki:
       active_index_directory: /var/loki/tsdb-index
       cache_location: /var/loki/tsdb-cache
     aws:
-      s3: "http://loki:egarreo01@loki-minio.lgtm.svc.cluster:9000/chunks"
+      s3: "http://test:test@loki-minio.lgtm.svc.cluster:9000/chunks"
       bucketnames: chunks
       endpoint: loki-minio.lgtm.svc.cluster.local:9000
       s3forcepathstyle: true
@@ -93,7 +93,6 @@ indexGateway:
   maxUnavailable: 1
   persistence:
     enabled: false
-    size: 10Gi
 ruler:
   replicas: 1
   maxUnavailable: 1
@@ -141,8 +140,8 @@ minio:
   enabled: true
   replicas: 1
   drivesPerNode: 2
-  rootUser: "std"
-  rootPassword: "egarreo01"
+  rootUser: "test"
+  rootPassword: "test"
   buckets:
     - name: chunks
       policy: none
@@ -160,6 +159,8 @@ minio:
     limits:
       memory: 1Gi
       cpu: 500m
+  persistence:
+    enabled: false
 
 ###### Disabled components ######
 bloomCompactor:

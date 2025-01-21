@@ -27,4 +27,8 @@ spec:
       - PruneLast=true
       - RespectIgnoreDifferences=true
       - ApplyOutOfSyncOnly=true
+<<<<<<< HEAD
 
+=======
+      - ServerSideApply=true
+>>>>>>> 4ffea1d (test loki minio)
