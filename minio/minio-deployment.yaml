@@ -27,10 +27,12 @@ spec:
                 secretKeyRef:
                   key: rootPassword
                   name: minio-cred
+            - name: MINIO_VOLUMES
+              value: "/export-{0...1}"
           volumeMounts:
-            - mountPath: /bitnami/minio/data/
+            - mountPath: /export-0
               name: export-0
-            - mountPath: /bitnami/minio/data/
+            - mountPath: /export-1/
               name: export-1
       volumes:
       - name: export-0
