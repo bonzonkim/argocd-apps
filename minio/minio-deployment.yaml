@@ -28,9 +28,9 @@ spec:
                   key: rootPassword
                   name: minio-cred
           volumeMounts:
-            - mountPath: /export-0
+            - mountPath: /bitnami/minio/data/
               name: export-0
-            - mountPath: /export-1
+            - mountPath: /bitnami/minio/data/
               name: export-1
       volumes:
       - name: export-0
