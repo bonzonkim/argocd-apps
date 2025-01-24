@@ -64,32 +64,32 @@ prometheus:
         memory: 1Gi
     additionalScrapeConfigs:
       scrape_configs:
-        - job_name: minio-job-bucket
-          bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoic3RkIiwiZXhwIjo0ODkxMDQ4OTk3fQ.BQYdTJChT0Rywj7uMYxP8E-eyiqlnhPfMPTf8_-bBim1LrpdcqH3pnu_QIWYGyT1_36VVKFPcb0BDrBBv7XnOQ
-          metrics_path: /minio/v2/metrics/bucket
-          scheme: https
-          static_configs:
-          - targets: [minio-test-api.k8s.bumgu.com]
-            scrape_configs:
-        - job_name: minio-job-resource
-          bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoic3RkIiwiZXhwIjo0ODkxMDUwMDQ3fQ._qYp7kWJm6Eg4a6NGWAJVZUFGiE0-NjxGTy6kHTZnnqkXNTejSp0fWIPsTRqbidlCaC59M7nFuqeq2xkYgY8gA
-          metrics_path: /minio/v2/metrics/resource
-          scheme: https
-          static_configs:
-          - targets: [minio-test-api.k8s.bumgu.com]
-            scrape_configs:
-        - job_name: minio-job-node
-          bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoic3RkIiwiZXhwIjo0ODkxMDUwMDQzfQ.-zsm86q7GiuHI_HzJ_bSGxHKo_1IE1AqNYBZLkuF3VAafmIzuE9b5fnphgJETWXy2I-ZTAQHvFrPXGvMvvDwuw
-          metrics_path: /minio/v2/metrics/node
-          scheme: https
-          static_configs:
-          - targets: [minio-test-api.k8s.bumgu.com]
         - job_name: minio-job
-          bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoic3RkIiwiZXhwIjo0ODkxMDUwMDQwfQ.1eOp8EDpvX6mi32P0OpYV7R8YmK7eNWv8eJYzENxYeIipNv-JELPXsq-t1bFeeWARYfAbCW8C4-vRBlbjyltqw
+          bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoic3RkIiwiZXhwIjo0ODkxMjk4NzI0fQ.bowbEx5HiW6WGspxRjGXl38GVj1W5CmGFgedGCbA9W4DdzTwdRGHpXPZWFYrOIDDjjj0sN4roknzynmRF0_REQ
           metrics_path: /minio/v2/metrics/cluster
           scheme: https
           static_configs:
           - targets: [minio-test-api.k8s.bumgu.com]
+        - job_name: minio-job-bucket
+          bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoic3RkIiwiZXhwIjo0ODkxMjk4NzM3fQ.rAn1aXKCxwyQXQOjDYwZa39lZyHJYN4XsmpO8xjV-mKE5bkz_EfhC8l0eP5iYQax1MDTTds3vsUR_sKoMUFKeg
+          metrics_path: /minio/v2/metrics/bucket
+          scheme: https
+          static_configs:
+          - targets: [minio-test-api.k8s.bumgu.com]
+        - job_name: minio-job-node
+          bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoic3RkIiwiZXhwIjo0ODkxMjk4NzQyfQ.VQiqCiKPtRJi9iqbNL7IpH_EL1D55WbsF9Bk7wZogTVbqBvn9EDE88Ve8hZI-jv5ZG5mJ8QRskx6eOtbGXzKGg
+          metrics_path: /minio/v2/metrics/node
+          scheme: https
+          static_configs:
+          - targets: [minio-test-api.k8s.bumgu.com]
+        - job_name: minio-job-resource
+          bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoic3RkIiwiZXhwIjo0ODkxMjk4NzQ5fQ.t0Ove18VkkWmy5Zv_La0VEv4DjuLgppdjK-ioT-vxfEeCjqV_j36lNGl7W0CIt1NhtniS40Kn1Gr0QCTWvOQZg
+          metrics_path: /minio/v2/metrics/resource
+          scheme: https
+          static_configs:
+          - targets: [minio-test-api.k8s.bumgu.com]
+
+
 
 
 
