@@ -1,0 +1,5 @@
+resources:
+  - "minio-deployment.yaml"
+  - "minio-service.yaml"
+  - "minio-ingress.yaml"
+  - "minio-pvc.yaml"
