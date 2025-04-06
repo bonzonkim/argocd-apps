@@ -34,7 +34,7 @@ func AsdfHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	res := map[string]string{
-		"msg": "ya-ho",
+		"msg": fmt.Sprintf("Endpoint %s", r.URL),
 	}
 
 	if err := json.NewEncoder(w).Encode(res); err != nil {
