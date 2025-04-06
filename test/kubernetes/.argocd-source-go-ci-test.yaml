@@ -1,3 +1,0 @@
-kustomize:
-  images:
-  - flrhyme9/go-ci-test:1.0.0
