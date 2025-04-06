@@ -29,19 +29,6 @@ func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func AsdfHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	res := map[string]string{
-		"msg": fmt.Sprintf("Endpoint %s", r.URL),
-	}
-
-	if err := json.NewEncoder(w).Encode(res); err != nil {
-		log.Printf("Failed to encode response : %v", err)
-	}
-}
-
 func UserHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -85,7 +72,6 @@ func ItemHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	const port = ":8080"
 	http.Handle("/hello", LogginMiddleWare(http.HandlerFunc(HelloHandler)))
-	http.Handle("/asdf", LogginMiddleWare(http.HandlerFunc(AsdfHandler)))
 	http.Handle("/user", LogginMiddleWare(http.HandlerFunc(UserHandler)))
 	http.Handle("/item", LogginMiddleWare(http.HandlerFunc(ItemHandler)))
 	fmt.Printf("Server listening on port %v", port)
