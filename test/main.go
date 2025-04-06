@@ -34,7 +34,7 @@ func CicdHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	res := map[string]string{
-		"msg": "ArgoCD Image updater works!",
+		"msg": "Making sure if ArgoCD Image Updater is really works",
 	}
 
 	if err := json.NewEncoder(w).Encode(res); err != nil {
