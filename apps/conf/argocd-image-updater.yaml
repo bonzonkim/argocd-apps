@@ -1,6 +1,12 @@
 config:
   argocd:
     grpcWeb: true
-    serverAddress: argocd-server.argocd.svc.cluster.local:443
+    serverAddress: argocd-server.argocd.svc:443
+    insecure: true
+
+envFrom:
+  - secretRef:
+      name: argocd-token
+
 gitCommitUser: "argo-bot"
 gitCommitMail: "argo-bot@bumgu.com"
