@@ -58,7 +58,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
-		"msg": fmt.Sprintf("Hello, %s", user.Name),
+		"msg": fmt.Sprintf("Hello, User: %s", user.Name),
 	})
 }
 
