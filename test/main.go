@@ -40,10 +40,36 @@ func AsdfHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type User struct {
+	Name     string `json:"name,omitempty"`
+	Password string `json:"password,omitempty"`
+}
+
+func UserHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowd", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var user User
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	log.Printf("Received JSON: %+v", user)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"msg": fmt.Sprintf("Hello, %s", user.Name),
+	})
+}
+
 func main() {
 	const port = ":8080"
 	http.Handle("/hello", LogginMiddleWare(http.HandlerFunc(HelloHandler)))
 	http.Handle("/asdf", LogginMiddleWare(http.HandlerFunc(AsdfHandler)))
+	http.Handle("/user", LogginMiddleWare(http.HandlerFunc(UserHandler)))
 	fmt.Printf("Server listening on port %v", port)
 
 	if err := http.ListenAndServe(port, nil); err != nil {
