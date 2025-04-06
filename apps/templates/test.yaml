@@ -17,6 +17,6 @@ spec:
     targetRevision: main
     kustomize:
       images:
-        - flrhyme9/go-ci-test:v1.0.0
+        - flrhyme9/go-ci-test:1.0.0
   syncPolicy:
     {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}

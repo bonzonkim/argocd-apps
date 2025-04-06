@@ -6,6 +6,6 @@ type User struct {
 }
 
 type Item struct {
-	Name string `json:"name,omitempty"`
-	Num  int    `json:"num,omitempty"`
+	Name    string `json:"name,omitempty"`
+	Company string `json:"company,omitempty"`
 }

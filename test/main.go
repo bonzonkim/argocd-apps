@@ -78,8 +78,7 @@ func ItemHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "applicaion/json")
 	json.NewEncoder(w).Encode(map[string]any{
-		"msg":  fmt.Sprintf("Item Received : %s", item.Name),
-		"kind": item.Num,
+		"msg": fmt.Sprintf("Item Received : %s | %s", item.Name, item.Company),
 	})
 }
 
