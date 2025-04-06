@@ -77,9 +77,9 @@ func ItemHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received JSON: %+v", item)
 
 	w.Header().Set("Content-Type", "applicaion/json")
-	json.NewEncoder(w).Encode(map[string]string{
+	json.NewEncoder(w).Encode(map[string]any{
 		"msg":  fmt.Sprintf("Item Received : %s", item.Name),
-		"kind": item.Kind,
+		"kind": item.Num,
 	})
 }
 

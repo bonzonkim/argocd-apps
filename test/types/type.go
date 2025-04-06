@@ -7,5 +7,5 @@ type User struct {
 
 type Item struct {
 	Name string `json:"name,omitempty"`
-	Kind string `json:"kind,omitempty"`
+	Num  int    `json:"num,omitempty"`
 }
