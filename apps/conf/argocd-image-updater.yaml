@@ -1,0 +1,6 @@
+config:
+  argocd:
+    grpcWeb: true
+    serverAddress: argocd-server.argocd.svc.cluster.local:443
+gitCommitUser: "argo-bot"
+gitCommitMail: "argo-bot@bumgu.com"

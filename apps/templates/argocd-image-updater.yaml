@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-image-updater
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: argocd
+  source:
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 0.12.1
+    chart: argo/argocd-image-updater
+    helm:
+      releaseName: argocd-image-updater
+      {{- $files := .Files }}
+      values: |
+        {{- $files.Get "conf/argocd-image-updater.yaml" | nindent 12 }}
+  syncPolicy:
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
