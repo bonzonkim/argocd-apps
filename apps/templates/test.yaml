@@ -15,8 +15,5 @@ spec:
     path: test/kubernetes
     repoURL: https://github.com/bonzonkim/argocd-apps
     targetRevision: main
-    kustomize:
-      images:
-        - flrhyme9/go-ci-test:1.0.0
   syncPolicy:
     {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
