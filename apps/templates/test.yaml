@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: go-ci-test
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+  source:
+    path: test/kubernetes
+    repoURL: https://github.com/bonzonkim/argocd-apps
+    targetRevision: main
+  syncPolicy:
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
