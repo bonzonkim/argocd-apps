@@ -3,6 +3,10 @@ kind: Application
 metadata:
   name: go-ci-test
   namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: flrhyme9/go-ci-test
+    argocd-image-updater.argoproj.io/flrhyme9.go-ci-test.update-strategy: latest
+    argocd-image-updater.argoproj.io/write-back-method: git
 spec:
   project: default
   destination:

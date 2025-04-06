@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/bonzonkim/ci-test/types"
 )
 
 func LogginMiddleWare(next http.Handler) http.Handler {
@@ -40,18 +42,13 @@ func AsdfHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type User struct {
-	Name     string `json:"name,omitempty"`
-	Password string `json:"password,omitempty"`
-}
-
 func UserHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowd", http.StatusMethodNotAllowed)
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	var user User
+	var user types.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
@@ -65,11 +62,33 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func ItemHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var item types.Item
+	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	log.Printf("Received JSON: %+v", item)
+
+	w.Header().Set("Content-Type", "applicaion/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"msg":  fmt.Sprintf("Item Received : %s", item.Name),
+		"kind": item.Kind,
+	})
+}
+
 func main() {
 	const port = ":8080"
 	http.Handle("/hello", LogginMiddleWare(http.HandlerFunc(HelloHandler)))
 	http.Handle("/asdf", LogginMiddleWare(http.HandlerFunc(AsdfHandler)))
 	http.Handle("/user", LogginMiddleWare(http.HandlerFunc(UserHandler)))
+	http.Handle("/item", LogginMiddleWare(http.HandlerFunc(ItemHandler)))
 	fmt.Printf("Server listening on port %v", port)
 
 	if err := http.ListenAndServe(port, nil); err != nil {
