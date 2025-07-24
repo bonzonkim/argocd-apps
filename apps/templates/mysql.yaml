@@ -12,7 +12,7 @@ spec:
     namespace: mysql
   source:
     repoURL: https://github.com/bonzonkim/argocd-apps.git
-    chart: mysql
+    path: mysql
     targetRevision: main
   syncPolicy:
     {{- toYaml .Values.argocd.syncPolicy | nindent 8 }}
