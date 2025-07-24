@@ -11,8 +11,8 @@ spec:
     server: {{ .Values.spec.destination.server }}
     namespace: mysql
   source:
-    repoURL: https://github.com/bonzonkim/argocd-apps.git
     path: mysql
+    repoURL: https://github.com/bonzonkim/argocd-apps.git
     targetRevision: main
   syncPolicy:
     {{- toYaml .Values.argocd.syncPolicy | nindent 8 }}
