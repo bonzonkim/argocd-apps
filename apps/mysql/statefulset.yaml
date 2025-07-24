@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: mysql
+spec:
+  serviceName: mysql
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0.43-oraclelinux9
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "1234"
+        - name: MYSQL_DATABASE
+          value: "phonelink"
+        ports:
+        - containerPort: 3306
+          name: mysql
+#        volumeMounts:
+#        - name: mysql-persistent-storage
+#          mountPath: /var/lib/mysql
+##  volumeClaimTemplates:
+##  - metadata:
+##      name: mysql-persistent-storage
+##    spec:
+##      accessModes: ["ReadWriteOnce"]
+##      resources:
+##        requests:
+#          storage: 10Gi

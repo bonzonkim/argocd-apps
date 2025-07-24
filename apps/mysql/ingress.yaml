@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mysql-ingress
+  namespace: mysql
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - mysql.k8s.bumgu.com  # Replace with your domain
+    secretName: k8s-bumgu-com-tls  # Secret containing the TLS certificate
+  rules:
+  - host: mysql.k8s.bumgu.com  # Replace with your domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mysql
+            port:
+              number: 3306

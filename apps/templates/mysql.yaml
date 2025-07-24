@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: phonelink-mysql
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: mysql
+  source:
+    repoURL: https://github.com/bonzonkim/argocd-apps.git
+    chart: mysql
+    targetRevision: main
+  syncPolicy:
+    {{- toYaml .Values.argocd.syncPolicy | nindent 8 }}
