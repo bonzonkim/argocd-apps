@@ -4,7 +4,7 @@ metadata:
   name: mysql-ingress
   namespace: mysql
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   tls:
   - hosts:
     - mysql.k8s.bumgu.com  # Replace with your domain
