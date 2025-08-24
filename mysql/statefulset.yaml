@@ -22,6 +22,10 @@ spec:
           value: "1234"
         - name: MYSQL_DATABASE
           value: "phonelink"
+        - name: TZ
+          value: "Asia/Seoul"
+        - name: MYSQL_TIME_ZONE
+          value: "Asia/Seoul"
         ports:
         - containerPort: 3306
           name: mysql
