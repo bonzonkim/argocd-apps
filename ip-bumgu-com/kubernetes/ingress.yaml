@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: ip.bumgu.com
+    - host: ip.k8s.bumgu.com
       http:
         paths:
           - path: /
@@ -18,5 +18,5 @@ spec:
                   number: 8080
   tls:
     - hosts:
-        - ip.bumgu.com
+        - ip.k8s.bumgu.com
       secretName: k8s-bumgu-com-tls
