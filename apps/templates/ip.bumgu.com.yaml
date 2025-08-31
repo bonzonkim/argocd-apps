@@ -11,7 +11,7 @@ spec:
     server: {{ .Values.spec.destination.server }}
     namespace: personal-api
   source:
-    path: ip-bumgu-com
+    path: ip-bumgu-com/kubernetes
     repoURL: https://github.com/bonzonkim/argocd-apps.git
     targetRevision: main
   syncPolicy:
