@@ -1,16 +1,16 @@
-name: ip.bumgu.com build
+name: ip-bumgu-com build
 
 on:
   push:
     branches:
       - "main"
     paths:
-      - "ip.bumgu.com"
+      - "ip-bumgu-com"
   pull_request:
     branches:
       - "main"
     paths:
-      - "ip.bumgu.com"
+      - "ip-bumgu-com"
 
 jobs:
   ip-bumgu-com:
@@ -18,7 +18,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ip.bumgu.com
+        working-directory: ip-bumgu-com
 
     steps:
       - name: Checkout Code
@@ -50,8 +50,8 @@ jobs:
       - name: Build & Push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ip.bumgu.com
-          file: ip.bumgu.com/Dockerfile
+          context: ip-bumgu-com
+          file: ip-bumgu-com/Dockerfile
           push: true
           platforms: linux/amd64, linux/arm64
           tags: flrhyme9/ip-bumgu-com:1.0.0
