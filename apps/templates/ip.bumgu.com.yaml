@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ip.bumgu.com
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: personal-api
+  source:
+    path: ip-bumgu-com
+    repoURL: https://github.com/bonzonkim/argocd-apps.git
+    targetRevision: main
+  syncPolicy:
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
