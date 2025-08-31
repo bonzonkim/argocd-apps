@@ -5,12 +5,12 @@ on:
     branches:
       - "main"
     paths:
-      - "ip-bumgu-com"
+      - "ip-bumgu-com/**"
   pull_request:
     branches:
       - "main"
     paths:
-      - "ip-bumgu-com"
+      - "ip-bumgu-com/**"
 
 jobs:
   ip-bumgu-com:
