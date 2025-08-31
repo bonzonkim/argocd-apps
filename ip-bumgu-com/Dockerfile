@@ -1,6 +1,6 @@
 FROM golang:1.24 AS builder
 WORKDIR /app
-COPY go.mod go.sum ./
+COPY go.mod ./
 RUN go mod tidy
 COPY . .
 RUN CGO_ENABLED=0 go build -o ./main
