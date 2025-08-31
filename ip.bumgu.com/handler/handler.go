@@ -21,6 +21,9 @@ func HandlerMiddleware(next http.Handler) http.Handler {
 }
 func IpHandler(w http.ResponseWriter, r *http.Request) {
 	ip := api.GetIp(r)
+	if r.URL.Path != "/" {
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
