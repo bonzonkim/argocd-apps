@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ip-bumgu-com-ing
+  namespace: personal-api
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: ip.bumgu.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: 
+                name: ip-bumgu-com-svc
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - ip.bumgu.com
+      secretName: k8s-bumgu-com-tls

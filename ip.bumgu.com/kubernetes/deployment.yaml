@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ip-bumgu-com
+  namespace: personal-api
+  labels:
+    app: ip-bumgu-com
+spec:
+  selector:
+    matchLabels:
+      app: ip-bumgu-com
+  template:
+    metadata:
+      labels:
+        app: ip-bumgu-com
+    spec:
+      containers:
+        - name: ip-bumgu-com
+          image: flrhyme9/ip-bumgu-com:1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080

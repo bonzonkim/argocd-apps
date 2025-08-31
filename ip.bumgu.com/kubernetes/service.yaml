@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ip-bumgu-com-svc
+  namespace: personal-api
+spec:
+  selector:
+    app: ip-bumgu-com
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
