@@ -8,7 +8,7 @@ spec:
   destination:
     server: {{ .Values.spec.destination.server }}
   source:
-    path: phonelink/frontend/kubernetes
+    path: phonelink/frontend/
     repoURL: https://github.com/bonzonkim/argocd-apps.git
     targetRevision: main
   syncPolicy:
