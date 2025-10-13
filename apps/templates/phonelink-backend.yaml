@@ -8,7 +8,7 @@ spec:
   destination:
     server: {{ .Values.spec.destination.server }}
   source:
-    path: phonelink/backend/
+    path: phonelink/backend
     repoURL: https://github.com/bonzonkim/argocd-apps.git
     targetRevision: main
   syncPolicy:
