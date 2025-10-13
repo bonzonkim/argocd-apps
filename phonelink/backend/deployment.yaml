@@ -4,8 +4,10 @@ metadata:
   name: phonelink-backend-deployment
   namespace: phonelink
 spec:
+  replicas: 1
   selector:
-    app: ph-backend
+    matchLabels:
+      app: ph-backend
   template:
     metadata:
       labels:
