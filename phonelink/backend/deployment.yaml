@@ -16,5 +16,81 @@ spec:
       containers:
         - name: ph-backend
           image: ghcr.io/hyunzai/phone-link/backend:latest
+          env:
+            - name: PORT
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: PORT
+            - name: DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: DATABASE_HOST
+            - name: DATABASE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: DATABASE_PORT
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: DATABASE_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: DATABASE_PASSWORD
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: DATABASE_NAME
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: JWT_SECRET
+            - name: JWT_SIGNUP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: JWT_SIGNUP_SECRET
+            - name: PHONE_LINK_CLIENT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: PHONE_LINK_CLIENT_URL
+            - name: NAVER_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: NAVER_CLIENT_ID
+            - name: NAVER_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: NAVER_CLIENT_SECRET
+            - name: KAKAO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: KAKAO_CLIENT_ID
+            - name: KAKAO_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: KAKAO_CLIENT_SECRET
+            - name: KAKAO_ADMIN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: KAKAO_ADMIN_KEY
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: SECRET_KEY
       imagePullSecrets:
         - name: phonelink-packages

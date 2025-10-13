@@ -16,5 +16,31 @@ spec:
       containers:
         - name: ph-frontend
           image: ghcr.io/hyunzai/phone-link/frontend:latest
+          env:
+            - name: VITE_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-frontend-secrets
+                  key: VITE_API_URL
+            - name: VITE_NAVER_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-frontend-secrets
+                  key: VITE_NAVER_CLIENT_ID
+            - name: VITE_NAVER_REDIRECT_URI
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-frontend-secrets
+                  key: VITE_NAVER_REDIRECT_URI
+            - name: VITE_KAKAO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-frontend-secrets
+                  key: VITE_KAKAO_CLIENT_ID
+            - name: VITE_KAKAO_REDIRECT_URI
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-frontend-secrets
+                  key: VITE_KAKAO_REDIRECT_URI
       imagePullSecrets:
         - name: phonelink-packages
