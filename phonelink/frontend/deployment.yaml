@@ -14,3 +14,5 @@ spec:
       containers:
         - name: ph-frontend
           image: ghcr.io/hyunzai/phone-link/frontend:latest
+      imagePullSecrets:
+        - name: phonelink-packages
