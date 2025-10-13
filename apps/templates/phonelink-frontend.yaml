@@ -2,11 +2,14 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: phonelink-frontend
-  namespace: phonelink
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   destination:
     server: {{ .Values.spec.destination.server }}
+    namespace: phonelink
   source:
     path: phonelink/frontend
     repoURL: https://github.com/bonzonkim/argocd-apps.git
