@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: phonelink-backend
+  namespace: phonelink
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+  source:
+    path: phonelink/backend/kubernetes
+    repoURL: https://github.com/bonzonkim/argocd-apps.git
+    targetRevision: main
+  syncPolicy:
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}

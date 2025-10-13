@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phonelink-frontend-deployment
+  namespace: phonelink
+spec:
+  selector:
+    app: ph-frontend
+  template:
+    metadata:
+      labels:
+        app: ph-frontend
+    spec:
+      containers:
+        - name: ph-frontend
+          image: ghcr.io/hyunzai/phone-link/frontend:latest

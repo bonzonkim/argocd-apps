@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phonelink-backend-deployment
+  namespace: phonelink
+spec:
+  selector:
+    app: ph-backend
+  template:
+    metadata:
+      labels:
+        app: ph-backend
+    spec:
+      containers:
+        - name: ph-backend
+          image: ghcr.io/hyunzai/phone-link/backend:latest

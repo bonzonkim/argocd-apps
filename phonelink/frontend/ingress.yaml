@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: phonelink-frontend-ingress
+  namespace: phonelink
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: phonelink.k8s.bumgu.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: phonelink-frontend-service
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - phonelink.k8s.bumgu.com
+      secretName: k8s-bumgu-com-tls
