@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: phonelink-frontend-ingress
   namespace: phonelink
-  annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: phonelink-stripprefix@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
@@ -36,15 +34,3 @@ spec:
     - hosts:
         - phonelink.k8s.bumgu.com
       secretName: k8s-bumgu-com-tls
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: phonelink-stripprefix
-  namespace: phonelink
-spec:
-  stripPrefix:
-    prefixes:
-      - /api
-      - /uploads
