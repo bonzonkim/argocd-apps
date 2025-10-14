@@ -16,6 +16,7 @@ spec:
       containers:
         - name: ph-frontend
           image: ghcr.io/hyunzai/phone-link/frontend:latest
+          imagePullPolicy: Always
           env:
             - name: VITE_API_URL
               valueFrom:

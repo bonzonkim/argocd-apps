@@ -16,6 +16,7 @@ spec:
       containers:
         - name: ph-backend
           image: ghcr.io/hyunzai/phone-link/backend:latest
+          imagePullPolicy: Always
           env:
             - name: PORT
               valueFrom:
