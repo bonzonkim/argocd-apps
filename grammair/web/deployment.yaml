@@ -17,6 +17,7 @@ spec:
           image: ghcr.io/bonzonkim/grammair-web/grammair-web:latest
           imagePullPolicy: Always
           envFrom:
-            - name: grammair-web-cm
+            - configMapRef:
+                name: grammair-web-cm
       imagePullSecrets:
         - name: grammair-packages
