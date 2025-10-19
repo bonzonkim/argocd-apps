@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grammair-web-ing
+  namespace: grammair
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: grammair.k8s.bumgu.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grammair-web-service
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - grammair.k8s.bumgu.com
+      secretName: k8s-bumgu-com-tls

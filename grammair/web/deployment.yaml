@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grammair-web-deployment
+  namespace: grammair
+spec:
+  selector:
+    matchLabels:
+      app: grammair-web
+  template:
+    metadata:
+      labels:
+        app: grammair-web
+    spec:
+      containers:
+        - name: grammair-web
+          image: ghcr.io/bonzonkim/grammair-web/grammair-web:latest
+          imagePullPolicy: Always
+          envFrom:
+            - name: grammair-web-cm
+      imagePullSecrets:
+        - name: grammair-packages
