@@ -16,6 +16,13 @@ spec:
                 name: grammair-web-service
                 port:
                   number: 3000
+          - path: /grammair
+            pathType: Prefix
+            backend:
+              service:
+                name: grammair-server-service
+                port:
+                  number: 8080
   tls:
     - hosts:
         - grammair.k8s.bumgu.com
