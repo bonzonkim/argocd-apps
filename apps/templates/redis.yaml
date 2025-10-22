@@ -11,9 +11,8 @@ spec:
     server: {{ .Values.spec.destination.server }}
     namespace: redis
   source:
-    repoURL: "oci://registry-1.docker.io/bitnamicharts/redis"
+    repoURL: oci://registry-1.docker.io/bitnamicharts/redis
     targetRevision: 23.2.1
-    #chart: redis
     helm:
       releaseName: redis
       {{- $files := .Files }}
