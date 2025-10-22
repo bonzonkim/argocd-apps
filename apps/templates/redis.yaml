@@ -11,7 +11,7 @@ spec:
     server: {{ .Values.spec.destination.server }}
     namespace: redis
   source:
-    repoURL: "oci://registry-1.docker.io/bitnamicharts"
+    repoURL: "oci://registry-1.docker.io/bitnamicharts/redis"
     # NOTE: version 7.1.2 is not working
     # https://github.com/argoproj/argo-cd/issues/18356
     targetRevision: 23.2.1
