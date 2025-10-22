@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: redis
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    # NOTE: version 7.1.2 is not working
+    # https://github.com/argoproj/argo-cd/issues/18356
+    targetRevision: 23.2.1
+    chart: redis
+    helm:
+      releaseName: redis
+      {{- $files := .Files }}
+      values: |
+        {{- $files.Get "conf/redis.yaml" | nindent 12 }}
+  syncPolicy:
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
