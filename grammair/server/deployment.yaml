@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: grammair-server
-          image: ghcr.io/bonzonkim/grammair-server/grammair-server:0.0.1
+          image: ghcr.io/bonzonkim/grammair-server/grammair-server:0.0.2
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
