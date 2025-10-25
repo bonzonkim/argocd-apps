@@ -16,7 +16,7 @@ spec:
                 name: grammair-web-service
                 port:
                   number: 3000
-          - path: /grammair
+          - path: /api
             pathType: Prefix
             backend:
               service:
