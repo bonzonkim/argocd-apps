@@ -3,6 +3,10 @@ kind: Application
 metadata:
   name: grammair-server
   namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: grammair-server=ghcr.io/bonzonkim/grammair-server/grammair-server
+    argocd-image-updater.argoproj.io/git-branch: master
+    argocd-image-updater.argoproj.io/grammair-server.pull-secret: "pullsecret:argocd/grammair-packages"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
