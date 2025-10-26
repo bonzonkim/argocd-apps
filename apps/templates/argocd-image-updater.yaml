@@ -12,7 +12,7 @@ spec:
     namespace: argocd
   source:
     repoURL: https://argoproj.github.io/argo-helm
-    targetRevision: 0.12.1
+    targetRevision: 0.14.0
     chart: argocd-image-updater
     helm:
       releaseName: argocd-image-updater
