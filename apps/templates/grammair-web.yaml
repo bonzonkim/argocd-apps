@@ -8,7 +8,7 @@ metadata:
     argocd-image-updater.argoproj.io/git-branch: main
     argocd-image-updater.argoproj.io/grammair-web.pull-secret: "pullsecret:argocd/grammair-packages"
   finalizers:
-    - resources-finalizers.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   destination:
