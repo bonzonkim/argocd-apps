@@ -4,6 +4,14 @@ configs:
   params:
     server.insecure: true
     server.enable.gzip: true
+  rbac:
+    create: true
+    annotations: {}
+    policy.default: ''
+    policy.csv: |
+      p, role:image-updater, applications, get, */*, allow
+      p, role:image-updater, applications, update, */*, allow
+      g, image-updater, role:image-updater
 server:
   ingress:
     enabled: true
