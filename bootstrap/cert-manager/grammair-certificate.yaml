@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: grammair-co-tls
   issuerRef:
-    name: letsencrypt-prod
+    name: letsencrypt-grammair
     kind: ClusterIssuer
   commonName: "grammair.co"
   dnsNames:

@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-grammair
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: flrhyme9@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-grammair
+    solvers:
+      - dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: infisical-managed-secret
+              key: GRAMMAIR_CLOUDFLARE_API_TOKEN
