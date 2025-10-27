@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grammair-co
+  namespace: grammair
+spec:
+  secretName: grammair-co-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: "grammair.co"
+  dnsNames:
+    - "grammair.co"
+    - "*.grammair.co"
