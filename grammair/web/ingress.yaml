@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: grammair.k8s.bumgu.com
+    - host: grammair.co
       http:
         paths:
           - path: /
@@ -25,5 +25,5 @@ spec:
                   number: 8080
   tls:
     - hosts:
-        - grammair.k8s.bumgu.com
-      secretName: k8s-bumgu-com-tls
+        - grammair.co
+      secretName: grammair-co-tls
