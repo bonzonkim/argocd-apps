@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ph-frontend
-          image: ghcr.io/phone-link-org/phone-link/frontend:latest
+          image: ghcr.io/phone-link-org/phone-link/frontend
           imagePullPolicy: Always
           env:
             - name: VITE_API_URL
