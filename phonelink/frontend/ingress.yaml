@@ -29,7 +29,7 @@ spec:
               service:
                 name: phonelink-frontend-service
                 port:
-                  number: 80
+                  number: 3000
   tls:
     - hosts:
         - phonelink.k8s.bumgu.com
