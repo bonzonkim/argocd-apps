@@ -1,3 +1,13 @@
+persistence:
+  type: pvc
+  enabled: true
+  storageClassName: ""
+  ## (Optional) Use this to bind the claim to an existing PersistentVolume (PV) by name.
+  accessModes:
+    - ReadWriteOnce
+  size: 3Gi
+  finalizers:
+    - kubernetes.io/pvc-protection
 ingress:
   enabled: true
   ingressClassName: traefik
