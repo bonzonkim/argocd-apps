@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ph-backend
-          image: ghcr.io/phone-link-org/phone-link/backend:1.0.3
+          image: ghcr.io/phone-link-org/phone-link/backend
           imagePullPolicy: Always
           env:
             - name: PORT
