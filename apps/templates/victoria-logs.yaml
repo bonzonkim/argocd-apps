@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: victoria-logs
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: victoria
+  source:
+    repoURL: https://victoriametrics.github.io/helm-charts/
+    targetRevision: 0.11.16
+    chart: victoria-logs-single
+    helm:
+      releaseName: victoria-logs
+      {{- $files := .Files }}
+      values: |
+        {{- $files.Get "conf/victoria-logs.yaml" | nindent 12 }}
+  syncPolicy:
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}
