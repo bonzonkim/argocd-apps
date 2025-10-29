@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: phonelink-backend=ghcr.io/phone-link-org/phone-link/backend
-    argocd-image-updater.argoproj.io/phonelink-backend.update-strategy: semver
+    argocd-image-updater.argoproj.io/phonelink-backend.update-strategy: newest-build
     argocd-image-updater.argoproj.io/git-branch: main
     argocd-image-updater.argoproj.io/phonelink-backend.pull-secret: "pullsecret:argocd/phonelink-packages"
   finalizers:
