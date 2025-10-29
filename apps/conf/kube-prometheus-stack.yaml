@@ -7,13 +7,13 @@ prometheus:
   prometheusSpec:
     podMonitorSelector:
       matchLabels:
-        release: k3s-prometheus
+        release: kube-prometheus-stack
     podMonitorNamespaceSelector: {}
     serviceMonitorSelector:
       matchLabels:
-        release: k3s-prometheus
+        release: kube-prometheus-stack
     serviceMonitorNamespaceSelector: {}
     ruleSelector:
       matchLabels:
-        release: k3s-prometheus
+        release: kube-prometheus-stack
     ruleNamespaceSelector: {}
