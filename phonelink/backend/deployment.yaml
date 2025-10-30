@@ -93,5 +93,10 @@ spec:
                 secretKeyRef:
                   name: phonelink-backend-secrets
                   key: SECRET_KEY
+            - name: ENVIRONMENT
+              valueFrom:
+                secretKeyRef:
+                  name: phonelink-backend-secrets
+                  key: ENVIRONMENT
       imagePullSecrets:
         - name: phonelink-packages
