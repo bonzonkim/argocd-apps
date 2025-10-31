@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: grammair-web=ghcr.io/bonzonkim/grammair-web/grammair-web
-    argocd-image-updater.argoproj.io/grammair.update-strategy: semver
+    argocd-image-updater.argoproj.io/grammair.update-strategy: newest-build
     argocd-image-updater.argoproj.io/git-branch: main
     argocd-image-updater.argoproj.io/grammair-web.pull-secret: "pullsecret:argocd/grammair-packages"
   finalizers:
