@@ -17,6 +17,13 @@ spec:
         - name: ph-backend
           image: ghcr.io/phone-link-org/phone-link/backend
           imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: "/app/uploads"
+              name: uploads-volume
+      volumes:
+        - name: uploads-volume
+          persistentVolumeClaim:
+            claimName: ph-backend-pvc
           env:
             - name: PORT
               valueFrom:
