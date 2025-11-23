@@ -16,6 +16,7 @@ spec:
       containers:
         - name: ph-backend
           image: ghcr.io/phone-link-org/phone-link/backend
+          command: ["/bin/sh", "-c", "sleep 3600"]
           imagePullPolicy: Always
           volumeMounts:
             - mountPath: "/app/uploads"
