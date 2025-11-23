@@ -22,7 +22,7 @@ spec:
               name: uploads-volume
           envFrom:
             - secretRef:
-              name: phonelink-backend-secrets
+                name: phonelink-backend-secrets
       volumes:
         - name: uploads-volume
           persistentVolumeClaim:
