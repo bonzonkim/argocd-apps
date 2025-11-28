@@ -1,3 +1,7 @@
+global:
+  postgresql:
+    auth:
+      postgresPassword: "1234"
 primary:
   service:
     type: NodePort
