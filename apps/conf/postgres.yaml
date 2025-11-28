@@ -1,3 +1,4 @@
-service:
-  nodePorts:
-    postgresql: "30543"
+primary:
+  service:
+    nodePorts:
+      postgresql: "30543"
