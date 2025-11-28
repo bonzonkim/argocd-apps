@@ -2,6 +2,8 @@ global:
   postgresql:
     auth:
       postgresPassword: "1234"
+      username: "rnm"
+      password: "1234"
 primary:
   service:
     type: NodePort
