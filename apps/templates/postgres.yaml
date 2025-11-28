@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: postgress
+  source:
+    repoURL: registry-1.docker.io/bitnamicharts
+    targetRevision: 18.1.13
+    chart: postgresql
+    helm:
+      releaseName: postgres
+      {{- $files := .Files }}
+      values: |
+        {{- $files.Get "conf/postgres.yaml" | nindent 12 }}
+  syncPolicy:
+    {{- toYaml .Values.argocd.autoSyncPolicy | nindent 8 }}

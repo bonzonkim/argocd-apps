@@ -1,0 +1,3 @@
+service:
+  nodePorts:
+    postgresql: "30543"
