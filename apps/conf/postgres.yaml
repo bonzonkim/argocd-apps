@@ -1,4 +1,5 @@
 primary:
   service:
+    type: NodePort
     nodePorts:
       postgresql: "30543"
