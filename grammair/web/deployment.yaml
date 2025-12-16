@@ -19,5 +19,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: grammair-web-cm
+            - secretRef:
+                name: grammair-web-secret
       imagePullSecrets:
         - name: grammair-packages
