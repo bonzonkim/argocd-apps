@@ -6,6 +6,9 @@ metadata:
 spec:
   parentRefs:
     - name: ip-bumgu-gw
+      sectionName: web
+    - name: ip-bumgu-gw
+      sectionName: web-secure
   hostnames:
     - ip.k8s.bumgu.com
   rules:
