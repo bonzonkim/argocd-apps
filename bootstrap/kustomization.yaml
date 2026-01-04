@@ -1,5 +1,5 @@
 resources:
   - cert-manager
   - namespaces.yaml
-  - gateway
+#  - gateway
   - auth
