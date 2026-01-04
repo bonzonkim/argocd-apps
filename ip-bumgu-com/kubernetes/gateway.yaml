@@ -8,17 +8,17 @@ spec:
   listeners:
     - name: web
       protocol: HTTP
-      port: 31250
+      port: 80
       allowedRoutes:
         namespaces:
-          from: Same
+          from: All
     - name: web-secure
       protocol: HTTPS
-      port: 31912
+      port: 443
       tls:
         mode: Terminate
         certificateRefs:
           - name: k8s-bumgu-com-tls
       allowedRoutes:
         namespaces:
-          from: Same
+          from: All
