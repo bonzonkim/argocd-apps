@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: victoria-logs
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   destination:
