@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: dev-redis
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   destination:
