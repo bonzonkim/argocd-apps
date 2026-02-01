@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: appset-helm
+  namespace: argocd
+spec:
+  goTemplate: true
+  preserveResourcesOnDeletion: true
+
+  generators:
+    - git:
+        repoURL: 'https://github.com/bonzonkim/argocd-apps'
+        revision: main
+        files:
+          - path: '*/*/config.json'
+        values:
+          path: '{{ trimSuffix "/config.json" .path.path }}'
+
+  # Only process apps that have 'chart' key (Helm apps)
+  selector:
+    matchExpressions:
+      - key: chart
+        operator: Exists
+
+  template:
+    metadata:
+      name: '{{ .appName }}'
+    spec:
+      project: default
+      sources:
+        - repoURL: '{{ .repoURL }}'
+          chart: '{{ .chart }}'
+          targetRevision: '{{ .targetRevision }}'
+          helm:
+            releaseName: '{{ default .chart .releaseName }}'
+            ignoreMissingValueFiles: true
+            valueFiles:
+              - '$values/{{ .path }}/values.yaml'
+        - repoURL: 'https://github.com/bonzonkim/argocd-apps'
+          targetRevision: main
+          ref: values
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ .namespace }}'
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
