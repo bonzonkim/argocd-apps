@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
+  # goTemplateOptions: ["missingkey=error"] <-- REMOVED
   preserveResourcesOnDeletion: true
 
   generators:
@@ -78,19 +78,19 @@ spec:
             operator: DoesNotExist
       template:
         metadata:
-          name: '{{ default (printf "%s-%s" (index (splitList "/" .path.path) 0) (index (splitList "/" .path.path) 1)) .appName }}'
+          name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
         spec:
           project: default
           sources:
             - repoURL: 'https://github.com/bonzonkim/argocd-apps'
               targetRevision: main
-              path: '{{ .path.path }}'
+              path: '{{ .path }}'
             - repoURL: 'https://github.com/bonzonkim/argocd-apps'
               targetRevision: main
               ref: values
           destination:
             server: https://kubernetes.default.svc
-            namespace: '{{ default (index (splitList "/" .path.path) 0) .namespace }}'
+            namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
           syncPolicy:
             automated:
               prune: false
@@ -101,7 +101,7 @@ spec:
   # Global Template (Default = Helm)
   template:
     metadata:
-      name: '{{ default (printf "%s-%s" (index (splitList "/" .path.path) 0) (index (splitList "/" .path.path) 1)) .appName }}'
+      name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
     spec:
       project: default
       sources:
@@ -112,13 +112,13 @@ spec:
             releaseName: '{{ default .chart .releaseName }}'
             ignoreMissingValueFiles: true
             valueFiles:
-              - '$values/{{ .path.path }}/values.yaml'
+              - '$values/{{ .path }}/values.yaml'
         - repoURL: 'https://github.com/bonzonkim/argocd-apps'
           targetRevision: main
           ref: values
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ default (index (splitList "/" .path.path) 0) .namespace }}'
+        namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
       syncPolicy:
         automated:
           prune: false
