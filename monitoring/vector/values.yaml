@@ -1,0 +1,41 @@
+role: "Agent"
+
+customConfig:
+  data_dir: /vector-data-dir
+  api:
+    enabled: true
+    address: 127.0.0.1:8686
+
+  sources:
+    kubernetes_logs:
+      type: kubernetes_logs
+      auto_partial_merge: true
+      max_line_bytes: 3276800
+
+  transforms:
+    parse_logs:
+      type: remap
+      inputs: [kubernetes_logs]
+      source: |
+        if .message == "" {
+          abort
+        }
+        ._msg = .message
+        .log = ._msg
+        .timestamp = now()
+        .kubernetes = {
+          "pod": .kubernetes.pod_name,
+          "namespace": .kubernetes.pod_namespace,
+          "container": .kubernetes.container_name
+        }
+
+  sinks:
+    victoria_logs:
+      type: elasticsearch
+      inputs: [parse_logs]
+      endpoints:
+        - http://victoria-logs-victoria-logs-single-server.victoria.svc.cluster.local:9428/insert/elasticsearch/
+      compression: gzip
+      api_version: v8
+      healthcheck:
+        enabled: false

@@ -1,0 +1,9 @@
+{
+    "appName": "argocd-image-updater",
+    "chart": "argocd-image-updater",
+    "repoURL": "https://argoproj.github.io/argo-helm",
+    "targetRevision": "0.14.0",
+    "releaseName": "argocd-image-updater",
+    "namespace": "argocd",
+    "valuesFile": true
+}

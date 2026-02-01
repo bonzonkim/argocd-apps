@@ -1,0 +1,9 @@
+{
+    "appName": "vector",
+    "chart": "vector",
+    "repoURL": "https://helm.vector.dev",
+    "targetRevision": "0.46.0",
+    "releaseName": "vector",
+    "namespace": "monitoring",
+    "valuesFile": true
+}

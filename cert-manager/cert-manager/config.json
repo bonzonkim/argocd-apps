@@ -1,0 +1,11 @@
+{
+    "appName": "cert-manager",
+    "chart": "cert-manager",
+    "repoURL": "https://charts.jetstack.io",
+    "targetRevision": "1.19.2",
+    "releaseName": "cert-manager",
+    "namespace": "cert-manager",
+    "valuesObject": {
+        "installCRDs": true
+    }
+}
