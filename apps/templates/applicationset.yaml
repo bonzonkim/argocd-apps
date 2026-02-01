@@ -6,7 +6,6 @@ metadata:
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
-  # 안전장치: ApplicationSet 삭제 시에도 Application 유지
   preserveResourcesOnDeletion: true
 
   generators:
@@ -14,13 +13,11 @@ spec:
         mergeKeys:
           - path
         generators:
-          # 1. 기본: 모든 */*/  디렉토리 스캔
           - git:
               repoURL: 'https://github.com/bonzonkim/argocd-apps'
               revision: main
               directories:
                 - path: '*/*'
-                # 제외 패턴
                 - path: 'apps/*'
                   exclude: true
                 - path: 'bootstrap/*'
@@ -32,70 +29,65 @@ spec:
                 - path: '.github/*'
                   exclude: true
               values:
-                path: '{{ .path.path }}'
+                path: '{{ "{{" }} .path.path {{ "}}" }}'
 
-          # 2. 추가 설정이 있는 앱 (config.json)
           - git:
               repoURL: 'https://github.com/bonzonkim/argocd-apps'
               revision: main
               files:
                 - path: '*/*/config.json'
               values:
-                path: '{{ trimSuffix "/config.json" .path }}'
+                path: '{{ "{{" }} trimSuffix "/config.json" .path {{ "}}" }}'
 
   template:
     metadata:
-      # 이름: config.json의 appName 또는 디렉토리 기반 (grammair/server → grammair-server)
-      name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
-      {{- if .annotations }}
+      name: '{{ "{{" }} default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName {{ "}}" }}'
       annotations:
-        {{- range $key, $value := .annotations }}
-        {{ $key }}: {{ $value }}
-        {{- end }}
-      {{- end }}
+        {{ "{{-" }} if .annotations {{ "}}" }}
+        {{ "{{-" }} range $key, $value := .annotations {{ "}}" }}
+        {{ "{{" }} $key {{ "}}" }}: {{ "{{" }} $value {{ "}}" }}
+        {{ "{{-" }} end {{ "}}" }}
+        {{ "{{-" }} end {{ "}}" }}
     spec:
       project: default
       sources:
-        {{- if .chart }}
-        # Helm chart source
-        - repoURL: '{{ .repoURL }}'
-          chart: '{{ .chart }}'
-          targetRevision: '{{ .targetRevision }}'
+        {{ "{{-" }} if .chart {{ "}}" }}
+        - repoURL: '{{ "{{" }} .repoURL {{ "}}" }}'
+          chart: '{{ "{{" }} .chart {{ "}}" }}'
+          targetRevision: '{{ "{{" }} .targetRevision {{ "}}" }}'
           helm:
-            releaseName: '{{ default .chart .releaseName }}'
-            {{- if .valuesFile }}
+            releaseName: '{{ "{{" }} default .chart .releaseName {{ "}}" }}'
+            {{ "{{-" }} if .valuesFile {{ "}}" }}
             valueFiles:
-              - '$values/{{ .path }}/values.yaml'
-            {{- end }}
-            {{- if .valuesObject }}
+              - '$values/{{ "{{" }} .path {{ "}}" }}/values.yaml'
+            {{ "{{-" }} end {{ "}}" }}
+            {{ "{{-" }} if .valuesObject {{ "}}" }}
             valuesObject:
-              {{- range $key, $value := .valuesObject }}
-              {{ $key }}: {{ $value }}
-              {{- end }}
-            {{- end }}
-        {{- else }}
-        # Raw K8s manifests (기본)
+              {{ "{{-" }} range $key, $value := .valuesObject {{ "}}" }}
+              {{ "{{" }} $key {{ "}}" }}: {{ "{{" }} $value {{ "}}" }}
+              {{ "{{-" }} end {{ "}}" }}
+            {{ "{{-" }} end {{ "}}" }}
+        {{ "{{-" }} else {{ "}}" }}
         - repoURL: 'https://github.com/bonzonkim/argocd-apps'
           targetRevision: main
-          path: '{{ .path }}'
-        {{- end }}
+          path: '{{ "{{" }} .path {{ "}}" }}'
+        {{ "{{-" }} end {{ "}}" }}
 
-        # Values reference (공통)
         - repoURL: 'https://github.com/bonzonkim/argocd-apps'
           targetRevision: main
           ref: values
 
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
+        namespace: '{{ "{{" }} default (index (splitList "/" .path) 0) .namespace {{ "}}" }}'
       syncPolicy:
         automated:
           prune: false
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
-          {{- if .syncOptions }}
-          {{- range .syncOptions }}
-          - {{ . }}
-          {{- end }}
-          {{- end }}
+          {{ "{{-" }} if .syncOptions {{ "}}" }}
+          {{ "{{-" }} range .syncOptions {{ "}}" }}
+          - {{ "{{" }} . {{ "}}" }}
+          {{ "{{-" }} end {{ "}}" }}
+          {{ "{{-" }} end {{ "}}" }}
