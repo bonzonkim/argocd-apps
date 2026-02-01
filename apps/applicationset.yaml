@@ -37,7 +37,7 @@ spec:
               files:
                 - path: '*/*/config.json'
               values:
-                path: '{{ trimSuffix "/config.json" .path }}'
+                path: '{{ trimSuffix "/config.json" .path.path }}'
       selector:
         matchExpressions:
           - key: chart
@@ -71,7 +71,7 @@ spec:
               files:
                 - path: '*/*/config.json'
               values:
-                path: '{{ trimSuffix "/config.json" .path }}'
+                path: '{{ trimSuffix "/config.json" .path.path }}'
       selector:
         matchExpressions:
           - key: chart
