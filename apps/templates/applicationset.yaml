@@ -29,7 +29,7 @@ spec:
                 - path: '.github/*'
                   exclude: true
               values:
-                path: '{{ .path.path }}'
+                path: '{{ "{{" }} .path.path {{ "}}" }}'
 
           - git:
               repoURL: 'https://github.com/bonzonkim/argocd-apps'
@@ -37,55 +37,55 @@ spec:
               files:
                 - path: '*/*/config.json'
               values:
-                path: '{{ trimSuffix "/config.json" .path }}'
+                path: '{{ "{{" }} trimSuffix "/config.json" .path {{ "}}" }}'
 
   template:
     metadata:
-      name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
-      {{- if .annotations }}
+      name: '{{ "{{" }} default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName {{ "}}" }}'
       annotations:
-        {{- range $key, $value := .annotations }}
-        {{ $key }}: {{ $value }}
-        {{- end }}
-      {{- end }}
+        {{ "{{" }}- if .annotations {{ "}}" }}
+        {{ "{{" }}- range $key, $value := .annotations {{ "}}" }}
+        {{ "{{" }} $key {{ "}}" }}: {{ "{{" }} $value | quote {{ "}}" }}
+        {{ "{{" }}- end {{ "}}" }}
+        {{ "{{" }}- end {{ "}}" }}
     spec:
       project: default
       sources:
-        {{- if .chart }}
-        - repoURL: '{{ .repoURL }}'
-          chart: '{{ .chart }}'
-          targetRevision: '{{ .targetRevision }}'
+        {{ "{{" }}- if .chart {{ "}}" }}
+        - repoURL: '{{ "{{" }} .repoURL {{ "}}" }}'
+          chart: '{{ "{{" }} .chart {{ "}}" }}'
+          targetRevision: '{{ "{{" }} .targetRevision {{ "}}" }}'
           helm:
-            releaseName: '{{ default .chart .releaseName }}'
-            {{- if .valuesFile }}
+            releaseName: '{{ "{{" }} default .chart .releaseName {{ "}}" }}'
+            {{ "{{" }}- if .valuesFile {{ "}}" }}
             valueFiles:
-              - '$values/{{ .path }}/values.yaml'
-            {{- end }}
-            {{- if .valuesObject }}
+              - '$values/{{ "{{" }} .path {{ "}}" }}/values.yaml'
+            {{ "{{" }}- end {{ "}}" }}
+            {{ "{{" }}- if .valuesObject {{ "}}" }}
             valuesObject:
-              {{- range $key, $value := .valuesObject }}
-              {{ $key }}: {{ $value }}
-              {{- end }}
-            {{- end }}
-        {{- else }}
+              {{ "{{" }}- range $key, $value := .valuesObject {{ "}}" }}
+              {{ "{{" }} $key {{ "}}" }}: {{ "{{" }} $value {{ "}}" }}
+              {{ "{{" }}- end {{ "}}" }}
+            {{ "{{" }}- end {{ "}}" }}
+        {{ "{{" }}- else {{ "}}" }}
         - repoURL: 'https://github.com/bonzonkim/argocd-apps'
           targetRevision: main
-          path: '{{ .path }}'
-        {{- end }}
+          path: '{{ "{{" }} .path {{ "}}" }}'
+        {{ "{{" }}- end {{ "}}" }}
         - repoURL: 'https://github.com/bonzonkim/argocd-apps'
           targetRevision: main
           ref: values
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
+        namespace: '{{ "{{" }} default (index (splitList "/" .path) 0) .namespace {{ "}}" }}'
       syncPolicy:
         automated:
           prune: false
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
-          {{- if .syncOptions }}
-          {{- range .syncOptions }}
-          - {{ . }}
-          {{- end }}
-          {{- end }}
+          {{ "{{" }}- if .syncOptions {{ "}}" }}
+          {{ "{{" }}- range .syncOptions {{ "}}" }}
+          - {{ "{{" }} . {{ "}}" }}
+          {{ "{{" }}- end {{ "}}" }}
+          {{ "{{" }}- end {{ "}}" }}
