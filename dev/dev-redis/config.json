@@ -1,9 +1,0 @@
-{
-    "appName": "dev-redis",
-    "chart": "redis",
-    "repoURL": "registry-1.docker.io/bitnamicharts",
-    "targetRevision": "23.2.1",
-    "releaseName": "dev-redis",
-    "namespace": "dev",
-    "valuesFile": true
-}
