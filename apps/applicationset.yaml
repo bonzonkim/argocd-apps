@@ -45,10 +45,6 @@ spec:
       template:
         metadata:
           name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
-          annotations:
-            {{- range $key, $value := .annotations }}
-            {{ $key }}: {{ $value | quote }}
-            {{- end }}
         spec:
           project: default
           sources:
@@ -60,10 +56,6 @@ spec:
                 ignoreMissingValueFiles: true
                 valueFiles:
                   - '$values/{{ .path }}/values.yaml'
-                valuesObject:
-                  {{- range $key, $value := .valuesObject }}
-                  {{ $key }}: {{ $value | toJson }}
-                  {{- end }}
             - repoURL: 'https://github.com/bonzonkim/argocd-apps'
               targetRevision: main
               ref: values
@@ -76,9 +68,6 @@ spec:
               selfHeal: true
             syncOptions:
               - CreateNamespace=true
-              {{- range .syncOptions }}
-              - {{ . }}
-              {{- end }}
 
     # 2. Raw Applications (chart does not exist)
     - merge:
@@ -116,10 +105,6 @@ spec:
       template:
         metadata:
           name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
-          annotations:
-            {{- range $key, $value := .annotations }}
-            {{ $key }}: {{ $value | quote }}
-            {{- end }}
         spec:
           project: default
           sources:
@@ -138,6 +123,3 @@ spec:
               selfHeal: true
             syncOptions:
               - CreateNamespace=true
-              {{- range .syncOptions }}
-              - {{ . }}
-              {{- end }}
