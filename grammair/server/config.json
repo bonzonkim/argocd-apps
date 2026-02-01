@@ -1,4 +1,6 @@
 {
+    "appName": "grammair-server",
+    "sourceType": "raw",
     "annotations": {
         "argocd-image-updater.argoproj.io/image-list": "grammair-server=ghcr.io/bonzonkim/grammair-server/grammair-server",
         "argocd-image-updater.argoproj.io/grammair-server.update-strategy": "semver",

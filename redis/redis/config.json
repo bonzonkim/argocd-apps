@@ -1,8 +1,9 @@
 {
-    "appName": "redis",
-    "chart": "redis",
-    "repoURL": "registry-1.docker.io/bitnamicharts",
-    "targetRevision": "23.2.1",
-    "releaseName": "redis",
-    "namespace": "redis"
+  "appName": "redis",
+  "chart": "redis",
+  "repoURL": "registry-1.docker.io/bitnamicharts",
+  "targetRevision": "23.2.1",
+  "releaseName": "redis",
+  "namespace": "redis",
+  "sourceType": "helm"
 }

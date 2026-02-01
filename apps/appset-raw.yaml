@@ -16,27 +16,22 @@ spec:
         values:
           path: '{{ trimSuffix "/config.json" .path.path }}'
 
-  # Only process apps that do NOT have 'chart' key (Raw apps)
   selector:
-    matchExpressions:
-      - key: chart
-        operator: DoesNotExist
+    matchLabels:
+      sourceType: raw
 
   template:
     metadata:
       name: '{{ .appName }}'
     spec:
       project: default
-      sources:
-        - repoURL: 'https://github.com/bonzonkim/argocd-apps'
-          targetRevision: main
-          path: '{{ .path }}'
-        - repoURL: 'https://github.com/bonzonkim/argocd-apps'
-          targetRevision: main
-          ref: values
+      source:
+        repoURL: 'https://github.com/bonzonkim/argocd-apps'
+        targetRevision: main
+        path: '{{ .path }}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ .namespace }}'
+        namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
       syncPolicy:
         automated:
           prune: false

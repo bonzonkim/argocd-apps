@@ -1,4 +1,6 @@
 {
+    "appName": "grammair-web",
+    "sourceType": "raw",
     "annotations": {
         "argocd-image-updater.argoproj.io/image-list": "grammair-web=ghcr.io/bonzonkim/grammair-web/grammair-web",
         "argocd-image-updater.argoproj.io/grammair-web.update-strategy": "semver",

@@ -16,11 +16,9 @@ spec:
         values:
           path: '{{ trimSuffix "/config.json" .path.path }}'
 
-  # Only process apps that have 'chart' key (Helm apps)
   selector:
-    matchExpressions:
-      - key: chart
-        operator: Exists
+    matchLabels:
+      sourceType: helm
 
   template:
     metadata:

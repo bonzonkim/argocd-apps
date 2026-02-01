@@ -1,4 +1,5 @@
 {
     "appName": "phonelink-mysql",
-    "namespace": "mysql"
+    "namespace": "mysql",
+    "sourceType": "raw"
 }
