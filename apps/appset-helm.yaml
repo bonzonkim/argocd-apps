@@ -15,10 +15,9 @@ spec:
           - path: '*/*/config.json'
         values:
           path: '{{ trimSuffix "/config.json" .path.path }}'
-
-  selector:
-    matchLabels:
-      sourceType: helm
+      selector:
+        matchLabels:
+          sourceType: helm
 
   template:
     metadata:
