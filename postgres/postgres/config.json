@@ -1,0 +1,9 @@
+{
+    "appName": "postgres",
+    "chart": "postgresql",
+    "repoURL": "registry-1.docker.io/bitnamicharts",
+    "targetRevision": "18.1.13",
+    "releaseName": "postgres",
+    "namespace": "postgres",
+    "valuesFile": true
+}

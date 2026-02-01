@@ -1,0 +1,8 @@
+{
+    "appName": "istiod",
+    "chart": "istiod",
+    "repoURL": "https://istio-release.storage.googleapis.com/charts",
+    "targetRevision": "1.28.0-rc.0",
+    "releaseName": "istiod",
+    "namespace": "istio-system"
+}

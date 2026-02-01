@@ -1,0 +1,9 @@
+{
+    "appName": "grafana",
+    "chart": "grafana",
+    "repoURL": "https://grafana.github.io/helm-charts",
+    "targetRevision": "10.1.2",
+    "releaseName": "grafana",
+    "namespace": "monitoring",
+    "valuesFile": true
+}

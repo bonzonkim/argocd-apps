@@ -1,0 +1,8 @@
+{
+    "appName": "infisical-secrets-operator",
+    "chart": "secrets-operator",
+    "repoURL": "https://dl.cloudsmith.io/public/infisical/helm-charts/helm/charts",
+    "targetRevision": "0.6.2",
+    "releaseName": "infisical-secrets-operator",
+    "namespace": "infisical-operator-system"
+}

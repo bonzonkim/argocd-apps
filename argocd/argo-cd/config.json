@@ -1,0 +1,9 @@
+{
+    "appName": "argo-cd",
+    "chart": "argo-cd",
+    "repoURL": "https://argoproj.github.io/argo-helm",
+    "targetRevision": "9.3.7",
+    "releaseName": "argocd",
+    "namespace": "argocd",
+    "valuesFile": true
+}
