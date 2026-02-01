@@ -9,7 +9,7 @@ spec:
   preserveResourcesOnDeletion: true
 
   generators:
-    # 1. Helm Applications (chart exists)
+    # 1. Helm Applications (chart exists) - Uses Global Template
     - merge:
         mergeKeys:
           - path
@@ -42,34 +42,8 @@ spec:
         matchExpressions:
           - key: chart
             operator: Exists
-      template:
-        metadata:
-          name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
-        spec:
-          project: default
-          sources:
-            - repoURL: '{{ .repoURL }}'
-              chart: '{{ .chart }}'
-              targetRevision: '{{ .targetRevision }}'
-              helm:
-                releaseName: '{{ default .chart .releaseName }}'
-                ignoreMissingValueFiles: true
-                valueFiles:
-                  - '$values/{{ .path }}/values.yaml'
-            - repoURL: 'https://github.com/bonzonkim/argocd-apps'
-              targetRevision: main
-              ref: values
-          destination:
-            server: https://kubernetes.default.svc
-            namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
-          syncPolicy:
-            automated:
-              prune: false
-              selfHeal: true
-            syncOptions:
-              - CreateNamespace=true
 
-    # 2. Raw Applications (chart does not exist)
+    # 2. Raw Applications (chart does not exist) - Uses Override Template
     - merge:
         mergeKeys:
           - path
@@ -123,3 +97,31 @@ spec:
               selfHeal: true
             syncOptions:
               - CreateNamespace=true
+
+  # Global Template (Default = Helm)
+  template:
+    metadata:
+      name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
+    spec:
+      project: default
+      sources:
+        - repoURL: '{{ .repoURL }}'
+          chart: '{{ .chart }}'
+          targetRevision: '{{ .targetRevision }}'
+          helm:
+            releaseName: '{{ default .chart .releaseName }}'
+            ignoreMissingValueFiles: true
+            valueFiles:
+              - '$values/{{ .path }}/values.yaml'
+        - repoURL: 'https://github.com/bonzonkim/argocd-apps'
+          targetRevision: main
+          ref: values
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
