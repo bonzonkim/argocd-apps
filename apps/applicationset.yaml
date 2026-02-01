@@ -5,15 +5,14 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
-  # goTemplateOptions: ["missingkey=error"] <-- REMOVED
   preserveResourcesOnDeletion: true
 
   generators:
-    # 1. Helm Applications (chart exists) - Uses Global Template
     - merge:
         mergeKeys:
           - path
         generators:
+          # Generator 1: Directories (Base)
           - git:
               repoURL: 'https://github.com/bonzonkim/argocd-apps'
               revision: main
@@ -30,81 +29,27 @@ spec:
                 - path: '.github/*'
                   exclude: true
               values:
+                # User requested strict .path.path usage
                 path: '{{ .path.path }}'
+          
+          # Generator 2: Config Files (Override/Supplement)
           - git:
               repoURL: 'https://github.com/bonzonkim/argocd-apps'
               revision: main
               files:
                 - path: '*/*/config.json'
               values:
+                # User requested strict .path.path usage
                 path: '{{ trimSuffix "/config.json" .path.path }}'
-      selector:
-        matchExpressions:
-          - key: chart
-            operator: Exists
 
-    # 2. Raw Applications (chart does not exist) - Uses Override Template
-    - merge:
-        mergeKeys:
-          - path
-        generators:
-          - git:
-              repoURL: 'https://github.com/bonzonkim/argocd-apps'
-              revision: main
-              directories:
-                - path: '*/*'
-                - path: 'apps/*'
-                  exclude: true
-                - path: 'bootstrap/*'
-                  exclude: true
-                - path: 'ip-bumgu-com/*'
-                  exclude: true
-                - path: '.git/*'
-                  exclude: true
-                - path: '.github/*'
-                  exclude: true
-              values:
-                path: '{{ .path.path }}'
-          - git:
-              repoURL: 'https://github.com/bonzonkim/argocd-apps'
-              revision: main
-              files:
-                - path: '*/*/config.json'
-              values:
-                path: '{{ trimSuffix "/config.json" .path.path }}'
-      selector:
-        matchExpressions:
-          - key: chart
-            operator: DoesNotExist
-      template:
-        metadata:
-          name: '{{ default (printf "%s-%s" (index (splitList "/" .path.path) 0) (index (splitList "/" .path.path) 1)) .appName }}'
-        spec:
-          project: default
-          sources:
-            - repoURL: 'https://github.com/bonzonkim/argocd-apps'
-              targetRevision: main
-              path: '{{ .path.path }}'
-            - repoURL: 'https://github.com/bonzonkim/argocd-apps'
-              targetRevision: main
-              ref: values
-          destination:
-            server: https://kubernetes.default.svc
-            namespace: '{{ default (index (splitList "/" .path.path) 0) .namespace }}'
-          syncPolicy:
-            automated:
-              prune: false
-              selfHeal: true
-            syncOptions:
-              - CreateNamespace=true
-
-  # Global Template (Default = Helm)
   template:
     metadata:
-      name: '{{ default (printf "%s-%s" (index (splitList "/" .path.path) 0) (index (splitList "/" .path.path) 1)) .appName }}'
+      name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
     spec:
       project: default
       sources:
+        # Source 1: Application Source (Conditional: Helm vs Raw)
+        {{- if .chart }}
         - repoURL: '{{ .repoURL }}'
           chart: '{{ .chart }}'
           targetRevision: '{{ .targetRevision }}'
@@ -112,13 +57,22 @@ spec:
             releaseName: '{{ default .chart .releaseName }}'
             ignoreMissingValueFiles: true
             valueFiles:
-              - '$values/{{ .path.path }}/values.yaml'
+              - '$values/{{ .path }}/values.yaml'
+        {{- else }}
+        - repoURL: 'https://github.com/bonzonkim/argocd-apps'
+          targetRevision: main
+          path: '{{ .path }}'
+        {{- end }}
+
+        # Source 2: Values Source (Always present)
+        # Note: We use .path here because the values block above flattened .path.path into .path
         - repoURL: 'https://github.com/bonzonkim/argocd-apps'
           targetRevision: main
           ref: values
+      
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ default (index (splitList "/" .path.path) 0) .namespace }}'
+        namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
       syncPolicy:
         automated:
           prune: false
