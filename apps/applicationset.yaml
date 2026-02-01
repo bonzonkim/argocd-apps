@@ -9,6 +9,7 @@ spec:
   preserveResourcesOnDeletion: true
 
   generators:
+    # 1. Helm Applications (chart exists)
     - merge:
         mergeKeys:
           - path
@@ -30,7 +31,6 @@ spec:
                   exclude: true
               values:
                 path: '{{ .path.path }}'
-
           - git:
               repoURL: 'https://github.com/bonzonkim/argocd-apps'
               revision: main
@@ -38,47 +38,106 @@ spec:
                 - path: '*/*/config.json'
               values:
                 path: '{{ trimSuffix "/config.json" .path }}'
-
-  template:
-    metadata:
-      name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
-      annotations:
-        {{- range $key, $value := .annotations }}
-        {{ $key }}: {{ $value | quote }}
-        {{- end }}
-    spec:
-      project: default
-      sources:
-        {{- if .chart }}
-        - repoURL: '{{ .repoURL }}'
-          chart: '{{ .chart }}'
-          targetRevision: '{{ .targetRevision }}'
-          helm:
-            releaseName: '{{ default .chart .releaseName }}'
-            ignoreMissingValueFiles: true
-            valueFiles:
-              - '$values/{{ .path }}/values.yaml'
-            valuesObject:
-              {{- range $key, $value := .valuesObject }}
-              {{ $key }}: {{ $value | toJson }}
+      selector:
+        matchExpressions:
+          - key: chart
+            operator: Exists
+      template:
+        metadata:
+          name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
+          annotations:
+            {{- range $key, $value := .annotations }}
+            {{ $key }}: {{ $value | quote }}
+            {{- end }}
+        spec:
+          project: default
+          sources:
+            - repoURL: '{{ .repoURL }}'
+              chart: '{{ .chart }}'
+              targetRevision: '{{ .targetRevision }}'
+              helm:
+                releaseName: '{{ default .chart .releaseName }}'
+                ignoreMissingValueFiles: true
+                valueFiles:
+                  - '$values/{{ .path }}/values.yaml'
+                valuesObject:
+                  {{- range $key, $value := .valuesObject }}
+                  {{ $key }}: {{ $value | toJson }}
+                  {{- end }}
+            - repoURL: 'https://github.com/bonzonkim/argocd-apps'
+              targetRevision: main
+              ref: values
+          destination:
+            server: https://kubernetes.default.svc
+            namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
+          syncPolicy:
+            automated:
+              prune: false
+              selfHeal: true
+            syncOptions:
+              - CreateNamespace=true
+              {{- range .syncOptions }}
+              - {{ . }}
               {{- end }}
-        {{- else }}
-        - repoURL: 'https://github.com/bonzonkim/argocd-apps'
-          targetRevision: main
-          path: '{{ .path }}'
-        {{- end }}
-        - repoURL: 'https://github.com/bonzonkim/argocd-apps'
-          targetRevision: main
-          ref: values
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
-      syncPolicy:
-        automated:
-          prune: false
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-          {{- range .syncOptions }}
-          - {{ . }}
-          {{- end }}
+
+    # 2. Raw Applications (chart does not exist)
+    - merge:
+        mergeKeys:
+          - path
+        generators:
+          - git:
+              repoURL: 'https://github.com/bonzonkim/argocd-apps'
+              revision: main
+              directories:
+                - path: '*/*'
+                - path: 'apps/*'
+                  exclude: true
+                - path: 'bootstrap/*'
+                  exclude: true
+                - path: 'ip-bumgu-com/*'
+                  exclude: true
+                - path: '.git/*'
+                  exclude: true
+                - path: '.github/*'
+                  exclude: true
+              values:
+                path: '{{ .path.path }}'
+          - git:
+              repoURL: 'https://github.com/bonzonkim/argocd-apps'
+              revision: main
+              files:
+                - path: '*/*/config.json'
+              values:
+                path: '{{ trimSuffix "/config.json" .path }}'
+      selector:
+        matchExpressions:
+          - key: chart
+            operator: DoesNotExist
+      template:
+        metadata:
+          name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
+          annotations:
+            {{- range $key, $value := .annotations }}
+            {{ $key }}: {{ $value | quote }}
+            {{- end }}
+        spec:
+          project: default
+          sources:
+            - repoURL: 'https://github.com/bonzonkim/argocd-apps'
+              targetRevision: main
+              path: '{{ .path }}'
+            - repoURL: 'https://github.com/bonzonkim/argocd-apps'
+              targetRevision: main
+              ref: values
+          destination:
+            server: https://kubernetes.default.svc
+            namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
+          syncPolicy:
+            automated:
+              prune: false
+              selfHeal: true
+            syncOptions:
+              - CreateNamespace=true
+              {{- range .syncOptions }}
+              - {{ . }}
+              {{- end }}
