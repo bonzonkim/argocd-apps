@@ -42,12 +42,10 @@ spec:
   template:
     metadata:
       name: '{{ default (printf "%s-%s" (index (splitList "/" .path) 0) (index (splitList "/" .path) 1)) .appName }}'
-      {{- if .annotations }}
       annotations:
         {{- range $key, $value := .annotations }}
-        {{ $key }}: {{ $value }}
+        {{ $key }}: {{ $value | quote }}
         {{- end }}
-      {{- end }}
     spec:
       project: default
       sources:
@@ -57,16 +55,13 @@ spec:
           targetRevision: '{{ .targetRevision }}'
           helm:
             releaseName: '{{ default .chart .releaseName }}'
-            {{- if .valuesFile }}
+            ignoreMissingValueFiles: true
             valueFiles:
               - '$values/{{ .path }}/values.yaml'
-            {{- end }}
-            {{- if .valuesObject }}
             valuesObject:
               {{- range $key, $value := .valuesObject }}
-              {{ $key }}: {{ $value }}
+              {{ $key }}: {{ $value | toJson }}
               {{- end }}
-            {{- end }}
         {{- else }}
         - repoURL: 'https://github.com/bonzonkim/argocd-apps'
           targetRevision: main
@@ -84,8 +79,6 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
-          {{- if .syncOptions }}
           {{- range .syncOptions }}
           - {{ . }}
-          {{- end }}
           {{- end }}
