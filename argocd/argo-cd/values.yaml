@@ -20,3 +20,5 @@ server:
       - hosts:
           - argocd.k8s.bumgu.com
         secretName: k8s-bumgu-com-tls
+  extraArgs:
+    - --insecure
