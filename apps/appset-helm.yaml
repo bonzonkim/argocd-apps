@@ -33,7 +33,7 @@ spec:
             releaseName: '{{ default .chart .releaseName }}'
             ignoreMissingValueFiles: true
             valueFiles:
-              - '$values/{{ .path }}/values.yaml'
+              - '$values/{{ .values.path }}/values.yaml'
         - repoURL: 'https://github.com/bonzonkim/argocd-apps'
           targetRevision: main
           ref: values

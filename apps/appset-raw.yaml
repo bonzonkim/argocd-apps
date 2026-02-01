@@ -28,10 +28,10 @@ spec:
       source:
         repoURL: 'https://github.com/bonzonkim/argocd-apps'
         targetRevision: main
-        path: '{{ .path }}'
+        path: '{{ .values.path }}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ default (index (splitList "/" .path) 0) .namespace }}'
+        namespace: '{{ default (index (splitList "/" .values.path) 0) .namespace }}'
       syncPolicy:
         automated:
           prune: false
