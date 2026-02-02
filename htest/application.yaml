@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tools-podinfo # 이름을 용도에 맞게 podinfo로 수정했습니다.
+  name: podinfo # 이름을 용도에 맞게 podinfo로 수정했습니다.
   namespace: argocd
 spec:
   project: default
