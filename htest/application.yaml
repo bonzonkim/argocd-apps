@@ -19,7 +19,7 @@ spec:
       helm:
         # 아래 ref: values로 지정한 소스를 참조합니다.
         valueFiles:
-          - $values/argocd-apps/htest/values.yaml
+          - $values/htest/values.yaml
     
     # 2. Values 파일이 있는 Git 저장소
     - repoURL: 'https://github.com/bonzonkim/argocd-apps'
