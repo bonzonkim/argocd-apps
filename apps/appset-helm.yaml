@@ -25,24 +25,6 @@ spec:
     spec:
       project: default
 
-      # config.json에 ignoreDifferences 설정이 있을 경우에만 렌더링됩니다.
-      {{- if .ignoreDifferences }}
-      ignoreDifferences:
-        {{- range .ignoreDifferences }}
-        - group: '{{ default "" .group }}'
-          kind: '{{ .kind }}'
-          {{- if .name }}
-          name: '{{ .name }}'
-          {{- end }}
-          {{- if .jsonPointers }}
-          jsonPointers:
-            {{- range .jsonPointers }}
-            - '{{ . }}'
-            {{- end }}
-          {{- end }}
-        {{- end }}
-      {{- end }}
-
       sources:
         - repoURL: '{{ .repoURL }}'
           chart: '{{ .chart }}'
@@ -67,3 +49,23 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
+
+  # config.json에 ignoreDifferences 설정이 있을 경우에만 렌더링됩니다.
+  templatePatch: |
+    {{- if .ignoreDifferences }}
+    spec:
+      ignoreDifferences:
+      {{- range .ignoreDifferences }}
+        - group: '{{ default "" .group }}'
+          kind: '{{ .kind }}'
+          {{- if .name }}
+          name: '{{ .name }}'
+          {{- end }}
+          {{- if .jsonPointers }}
+          jsonPointers:
+          {{- range .jsonPointers }}
+            - '{{ . }}'
+          {{- end }}
+          {{- end }}
+      {{- end }}
+    {{- end }}
