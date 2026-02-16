@@ -5,5 +5,13 @@
   "targetRevision": "23.2.1",
   "releaseName": "redis",
   "namespace": "redis",
-  "sourceType": "helm"
+  "sourceType": "helm",
+  "ignoreDifferences": [
+    {
+      "group": "",
+      "kind": "Secret",
+      "name": "redis",
+      "jsonPointers": ["/data/redis-password"]
+    }
+  ]
 }
