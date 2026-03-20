@@ -21,7 +21,7 @@ config:
     k8s-app: kube-dns
 
   # -- If false, it will bind 0.0.0.0, otherwise dnsServer and localDns will be used. https://github.com/bottlerocket-os/bottlerocket/issues/3711#issuecomment-1907087528
-  bindIp: false
+  bindIp: true
 
   # -- Set communication protocol. Options are `prefer_udp` or `force_tcp`
   commProtocol: "force_tcp"
