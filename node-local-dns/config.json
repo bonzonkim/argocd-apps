@@ -1,0 +1,9 @@
+{
+  "appName": "node-local-dns",
+  "chart": "node-local-dns",
+  "repoURL": "https://raw.githubusercontent.com/deliveryhero/helm-charts/refs/heads/master/",
+  "targetRevision": "2.7.0",
+  "releaseName": "node-local-dns",
+  "namespace": "kube-system",
+  "sourceType": "helm"
+}
