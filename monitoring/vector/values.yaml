@@ -23,7 +23,7 @@ customConfig:
         ._msg = .message
         .log = ._msg
         .timestamp = now()
-        .kubernetes = {
+        .kube = {
           "pod": .kubernetes.pod_name,
           "namespace": .kubernetes.pod_namespace,
           "container": .kubernetes.container_name
