@@ -22,6 +22,10 @@ spec:
   template:
     metadata:
       name: '{{ .appName }}'
+      annotations:
+        {{- range $k, $v := .annotations }}
+        {{ $k }}: '{{ $v }}'
+        {{- end }}
     spec:
       project: default
       source:
