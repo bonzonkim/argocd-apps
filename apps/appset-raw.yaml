@@ -22,10 +22,6 @@ spec:
   template:
     metadata:
       name: '{{ .appName }}'
-      annotations:
-        {{- range $k, $v := .annotations }}
-        {{ $k }}: '{{ $v }}'
-        {{- end }}
     spec:
       project: default
       source:
@@ -41,3 +37,12 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+
+  templatePatch: |
+    {{- if .annotations }}
+    metadata:
+      annotations:
+        {{- range $k, $v := .annotations }}
+        {{ $k }}: '{{ $v }}'
+        {{- end }}
+    {{- end }}
