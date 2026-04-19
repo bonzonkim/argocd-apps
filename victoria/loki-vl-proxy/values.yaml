@@ -52,7 +52,7 @@ fullnameOverride: ""
 #   <persistence.mountPath>/<persistence.fileName>
 extraArgs:
   listen: ":3100"
-  backend: "http://victorialogs:9428"
+  backend: "http://victoria-logs-victoria-logs-single-server:9428"
   cache-ttl: "60s"
   cache-max: "10000"
   # Loki-aligned query_range window cache defaults:
