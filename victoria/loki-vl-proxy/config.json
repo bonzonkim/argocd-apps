@@ -1,7 +1,7 @@
 {
   "appName": "loki-vl-proxy",
   "chart": "loki-vl-proxy",
-  "repoURL": "ghcr.io/reliablyobserve/charts/loki-vl-proxy ",
+  "repoURL": "ghcr.io/reliablyobserve/charts",
   "targetRevision": "1.8.1",
   "releaseName": "loki-vl-proxy",
   "namespace": "victoria",
