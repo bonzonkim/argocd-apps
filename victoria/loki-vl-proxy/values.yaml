@@ -1,0 +1,705 @@
+# Loki-VL-proxy Helm values
+# VictoriaMetrics-style: all proxy flags exposed as extraArgs
+# Default install shape:
+# - 1 replica
+# - Deployment workload
+# - ClusterIP service on port 3100
+# - in-memory cache only
+# - no ingress / ServiceMonitor / HPA / persistence unless explicitly enabled
+
+replicaCount: 1
+
+# Workload controller for the proxy pods.
+# Default is Deployment for stateless installs.
+# Set workload.kind=StatefulSet when you want stable pod identity and per-pod PVCs
+# for the disk cache.
+workload:
+  kind: Deployment
+  # Deployment-only rollout strategy. Leave empty to use the Kubernetes default.
+  deploymentStrategy: {}
+  statefulSet:
+    # Headless service name used by StatefulSet network identity.
+    # Empty = <release>-headless.
+    serviceName: ""
+    # Parallel is usually fine for horizontally scaled proxy replicas.
+    podManagementPolicy: Parallel
+    updateStrategy:
+      type: RollingUpdate
+    # Optional native StatefulSet PVC retention policy.
+    # Example:
+    # persistentVolumeClaimRetentionPolicy:
+    #   whenDeleted: Retain
+    #   whenScaled: Delete
+    persistentVolumeClaimRetentionPolicy: {}
+
+image:
+  repository: ghcr.io/reliablyobserve/loki-vl-proxy
+  tag: ""  # defaults to Chart.appVersion
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+# VictoriaMetrics-style: pass any CLI flag via extraArgs
+# These map directly to the binary's -flag arguments.
+# Defaults here are intentionally conservative:
+# - backend points at an in-cluster VictoriaLogs service
+# - memory cache is enabled
+# - HTTP hardening limits are enabled
+# If persistence.enabled=true and you do NOT set extraArgs.disk-cache-path,
+# the chart injects -disk-cache-path automatically as:
+#   <persistence.mountPath>/<persistence.fileName>
+extraArgs:
+  listen: ":3100"
+  backend: "http://victorialogs:9428"
+  cache-ttl: "60s"
+  cache-max: "10000"
+  # Loki-aligned query_range window cache defaults:
+  # - split by 1h windows
+  # - keep bounded backend fanout
+  # - do not cache near-now windows
+  # - keep historical windows warm for repeat drilldowns
+  query-range-windowing: "true"
+  query-range-split-interval: "1h"
+  query-range-max-parallel: "2"
+  query-range-adaptive-parallel: "true"
+  query-range-adaptive-min-parallel: "2"
+  query-range-adaptive-max-parallel: "8"
+  query-range-latency-target: "1.5s"
+  query-range-latency-backoff: "3s"
+  query-range-adaptive-cooldown: "30s"
+  query-range-error-backoff-threshold: "0.02"
+  query-range-freshness: "10m"
+  query-range-recent-cache-ttl: "0s"
+  query-range-history-cache-ttl: "24h"
+  recent-tail-refresh-enabled: "true"
+  recent-tail-refresh-window: "2m"
+  recent-tail-refresh-max-staleness: "15s"
+  # Long-range phase controls (defaults shown here; uncomment to override quickly):
+  # query-range-prefilter-index-stats: "true"          # preflight /select/logsql/hits to skip empty windows
+  # query-range-prefilter-min-windows: "8"             # prefilter engages only when split windows >= this threshold
+  # query-range-stream-aware-batching: "true"          # reduce concurrency for expensive windows
+  # query-range-expensive-hit-threshold: "2000"        # hits/window threshold considered expensive
+  # query-range-expensive-max-parallel: "1"            # max parallelism for expensive windows
+  # query-range-align-windows: "true"                  # align split boundaries for overlap cache reuse
+  # query-range-window-timeout: "20s"                  # per-window timeout budget (0 disables)
+  # query-range-partial-responses: "false"             # return partial response on retryable backend failures
+  # query-range-background-warm: "true"                # continue warming failed windows in background
+  # query-range-background-warm-max-windows: "24"      # cap background warm fanout
+  # recent-tail-refresh-enabled: "true"                # bypass stale near-now cache hits and fetch latest backend data
+  # recent-tail-refresh-window: "2m"                   # only near-now ranges (end within window) are refreshed
+  # recent-tail-refresh-max-staleness: "15s"           # max near-now cache age before bypass
+  # Indexed label-values browse cache (high-cardinality label UX).
+  # Keep disabled by default; enable when label value lists are large and you
+  # want hotset-first responses with optional offset/search.
+  label-values-indexed-cache: "false"
+  label-values-hot-limit: "200"
+  label-values-index-max-entries: "200000"
+  patterns-enabled: "true"
+  patterns-autodetect-from-queries: "false"
+  backend-min-version: "v1.30.0"
+  backend-allow-unsupported-version: "false"
+  backend-version-check-timeout: "5s"
+  # Frontend/client-facing compression:
+  # - default to gzip for broad Loki/Grafana compatibility
+  # - only spend CPU once responses are at least 1KiB
+  # - route-aware policy in the proxy raises thresholds for metadata/control paths
+  response-compression: "gzip"
+  response-compression-min-bytes: "1024"
+  peer-timeout: "2s"
+  peer-write-through: "true"
+  peer-write-through-min-ttl: "30s"
+  log-level: "info"
+  # Hardening
+  http-read-timeout: "30s"
+  http-write-timeout: "120s"
+  http-idle-timeout: "120s"
+  # Downstream HTTP/1.x keepalive rotation to avoid one long-lived datasource
+  # connection pinning a single proxy pod indefinitely. These settings do not
+  # affect upstream proxy->VictoriaLogs pooling.
+  http-conn-max-age: "10m"
+  http-conn-max-age-jitter: "2m"
+  http-conn-max-requests: "256"
+  http-conn-overload-max-age: "90s"
+  http-max-header-bytes: "1048576"
+  http-max-body-bytes: "10485760"
+  # Uncomment to enable features:
+  # tenant-map: '{"team-alpha":{"account_id":"100","project_id":"1"}}'
+  # disk-cache-path: "/cache/data.db"
+  # disk-cache-compress: "true"
+  # disk-cache-flush-size: "100"
+  # disk-cache-flush-interval: "5s"
+  # disk-cache-max-bytes: "21474836480" # 20Gi safety cap (0 = unlimited)
+  # disk-cache-encryption-key: ""
+  # otlp-endpoint: "http://otel-collector:4318/v1/metrics"
+  # otlp-interval: "30s"
+  # otlp-compression: "gzip"
+  # otlp-timeout: "10s"
+  # otlp-tls-skip-verify: "false"
+  # Backend auth to VictoriaLogs
+  # backend-basic-auth: "user:password"
+  # forward-headers: "Authorization"
+  # forward-authorization: "true" # convenience flag; appends Authorization to forwarded header allowlist
+  # forward-cookies: "vmui_session"
+  # Compatibility profile knobs:
+  # - label-style: passthrough | underscores
+  # - metadata-field-mode: native | translated | hybrid
+  # - emit-structured-metadata: true | false
+  # - patterns-enabled: true | false
+  #
+  # Common profile examples:
+  # 1) Loki/Grafana conservative:
+  #    label-style=underscores, metadata-field-mode=translated, emit-structured-metadata=true
+  # 2) Drilldown/OTel mixed mode:
+  #    label-style=underscores, metadata-field-mode=hybrid, emit-structured-metadata=true
+  # 3) Native VL field surface:
+  #    label-style=passthrough, metadata-field-mode=native, emit-structured-metadata=true
+  # Legacy strict parser fallback (only if required):
+  #    emit-structured-metadata=false
+  #
+  # Docs:
+  # - https://github.com/ReliablyObserve/Loki-VL-proxy/blob/main/docs/configuration.md#compatibility-profiles
+  # - https://github.com/ReliablyObserve/Loki-VL-proxy/blob/main/docs/api-reference.md
+  # - https://github.com/ReliablyObserve/Loki-VL-proxy/blob/main/docs/compatibility-matrix.md
+  # Label translation (OTel compatibility)
+  # label-style: "underscores"  # convert VL dotted fields (service.name) to Loki underscores (service_name)
+  # field-mapping: '[{"vl_field":"custom.field","loki_label":"custom_label"}]'
+  # Derived fields (trace linking)
+  # derived-fields: '[{"name":"traceID","matcherRegex":"trace_id=([a-f0-9]+)","url":"http://tempo/trace/${__value.raw}"}]'
+  # stream-response: "true"  # chunked transfer encoding for large results
+  # Stream selector optimization — list VL _stream_fields labels for fast index path
+  # stream-fields: "app,env,namespace"
+  # Indexed label-values browse cache (high-cardinality UX hardening)
+  # label-values-indexed-cache: "true"
+  # label-values-hot-limit: "200"
+  # label-values-index-max-entries: "200000"
+  # label-values-index-persist-path: "/cache/label-values-index.json"
+  # label-values-index-persist-interval: "30s"
+  # label-values-index-startup-stale-threshold: "60s"
+  # label-values-index-startup-peer-warm-timeout: "5s"
+  # Patterns snapshot persistence (recommended for Drilldown patterns warm restart/fleet sync)
+  # patterns-persist-path: "/cache/patterns-snapshot.json"
+  # patterns-persist-interval: "30s"
+  # patterns-startup-stale-threshold: "60s"
+  # patterns-startup-peer-warm-timeout: "5s"
+  # patterns-autodetect-from-queries: "false"         # warm /patterns from successful query/query_range responses
+  # Sizing hint: plan roughly ~96 bytes RAM/value and ~60% of RAM footprint on disk snapshot.
+  # For persisted patterns/label-values snapshots, prefer StatefulSet + PVC.
+  # System metrics scope override (chart auto-injects when systemMetrics.hostProc.enabled=true):
+  # proc-root: "/host/proc"
+  #
+  # Full optional flag catalog (commented defaults from runtime):
+  # cache-max-bytes: "268435456"                # 256Mi L1 max bytes
+  # compat-cache-enabled: "true"                # enable Tier0 compatibility-edge cache
+  # compat-cache-max-percent: "10"              # Tier0 share of L1 cache budget (max 50)
+  # backend-timeout: "120s"                     # upstream request timeout
+  # backend-min-version: "v1.30.0"              # startup minimum supported VictoriaLogs version
+  # backend-allow-unsupported-version: "false"  # allow older backend at your own risk
+  # backend-version-check-timeout: "5s"         # startup backend version check timeout
+  # backend-tls-skip-verify: "false"
+  # deployment-environment: ""                  # OTel deployment.environment.name
+  # otel-service-name: "loki-vl-proxy"
+  # otel-service-namespace: ""
+  # otel-service-instance-id: ""
+  # otlp-headers: ""                            # comma-separated key=value pairs
+  # response-compression: "gzip"               # client-facing compression stays on the Loki/Grafana-safe gzip path
+  # response-compression-min-bytes: "1024"     # minimum response size before frontend compression starts
+  # response-gzip: "true"
+  # max-lines: "1000"
+  # auth.enabled: "false"                       # require tenant header
+  # tenant.allow-global: "false"                # allow global tenant map wildcard entry
+  # metrics.max-tenants: "256"
+  # metrics.max-clients: "256"
+  # metrics.trust-proxy-headers: "false"
+  # server.register-instrumentation: "true"     # expose /metrics
+  # server.enable-pprof: "false"
+  # server.enable-query-analytics: "false"
+  # server.admin-auth-token: ""                 # bearer token for admin/debug endpoints
+  # tail.mode: "auto"                           # auto | native | synthetic
+  # tail.allowed-origins: ""                    # comma-separated websocket origin allowlist
+  # ruler-backend: ""                           # optional /rules passthrough backend
+  # alerts-backend: ""                          # optional /alerts passthrough backend
+  # extra-label-fields: "service.name,host.name"
+  # peer-auth-token: ""                         # strongly recommended for fleets; avoids transient discovery/IP-only peer auth 403s on /_cache/get and /_cache/set
+  # peer-timeout: "2s"                          # timeout for peer-cache fetches to owner peers
+  # peer-write-through: "true"                  # push eligible non-owner writes to owner peer
+  # peer-write-through-min-ttl: "30s"           # only TTL >= threshold is pushed to owner peer
+  # peer-hot-read-ahead-enabled: "false"        # bounded periodic prefetch from peer hot indexes
+  # peer-hot-read-ahead-interval: "30s"         # base period for hot-index pull cycle
+  # peer-hot-read-ahead-jitter: "5s"            # random jitter added to interval
+  # peer-hot-read-ahead-top-n: "256"            # top N hot keys requested per peer index pull
+  # peer-hot-read-ahead-max-keys-per-interval: "64"     # max prefetched keys per cycle
+  # peer-hot-read-ahead-max-bytes-per-interval: "8388608" # max prefetched bytes per cycle
+  # peer-hot-read-ahead-max-concurrency: "4"    # max concurrent hot-index/prefetch pulls
+  # peer-hot-read-ahead-min-ttl: "30s"          # minimum remaining TTL for prefetch candidates
+  # peer-hot-read-ahead-max-object-bytes: "262144" # max object size eligible for prefetch
+  # peer-hot-read-ahead-tenant-fair-share: "50" # per-tenant first-pass cap (% of key budget)
+  # peer-hot-read-ahead-error-backoff: "15s"    # base cooldown after read-ahead pull errors
+  # peer-discovery: "dns"                       # chart-managed via peerCache.* values
+  # peer-dns: ""                                # chart-managed when peerCache.enabled=true
+  # peer-self: ""                               # chart-managed when peerCache.enabled=true
+  # peer-static: ""                             # used with peer-discovery=static
+  # disk-cache-min-ttl: "30s"                   # skip L2 writes for very short-lived entries
+  # tls-cert-file: ""                           # enable HTTPS listener when cert+key set
+  # tls-key-file: ""
+  # tls-client-ca-file: ""
+  # tls-require-client-cert: "false"
+
+# First-class observability flags.
+# The chart renders these as CLI args unless the same key is already set under
+# extraArgs, so existing extraArgs-based installs keep precedence.
+#
+# Use env / envFrom for secrets; keep these values for non-secret runtime knobs.
+observability:
+  # Empty keeps the binary default / env-based value.
+  deploymentEnvironment: ""
+  otel:
+    # Empty keeps the binary default or env-derived value.
+    serviceName: ""
+    serviceNamespace: ""
+    serviceInstanceId: ""
+  otlp:
+    # Empty endpoint disables OTLP export unless set elsewhere.
+    endpoint: ""
+    interval: ""
+    compression: ""
+    timeout: ""
+    headers: ""
+    tlsSkipVerify: false
+  metrics:
+    maxTenants: 256
+    maxClients: 256
+    trustProxyHeaders: false
+    exportSensitiveLabels: false
+  server:
+    registerInstrumentation: true
+    metricsMaxConcurrency: 1
+
+# Custom Drilldown patterns always prepended to /loki/api/v1/patterns.
+# Runtime supports:
+# - inline JSON/newline config via -patterns-custom
+# - file-based config via -patterns-custom-file
+#
+# The chart can source file-based patterns from an existing ConfigMap or create
+# one from patternsCustom.file.content.
+patternsCustom:
+  # Inline patterns are rendered as a JSON array and passed via -patterns-custom.
+  inline: []
+  # - "time=\"<_>\" level=info msg=\"finished unary call\" grpc.code=OK"
+  # - "component=proxy http.route=<_> http.response.status_code=<_->"
+  file:
+    enabled: false
+    # Path inside the container passed to -patterns-custom-file.
+    path: /etc/loki-vl-proxy/patterns/custom-patterns.json
+    # Use an existing ConfigMap when set.
+    existingConfigMap: ""
+    # Optional override for chart-managed ConfigMap name (when existingConfigMap is empty).
+    configMapName: ""
+    # ConfigMap key mounted as the file basename from path.
+    key: custom-patterns.json
+    # File content used when chart creates the ConfigMap.
+    # Accepted by runtime:
+    # - JSON array of strings
+    # - newline-separated patterns (supports # comments)
+    content: ""
+
+# Go runtime tuning:
+# The chart exports GOMEMLIMIT into the container env.
+# Priority:
+# 1) goMemLimit (explicit value) if set
+# 2) goMemLimitPercent% of resources.limits.memory when goMemLimit is empty
+#
+# Example with limits.memory=256Mi and goMemLimitPercent=70:
+#   GOMEMLIMIT=187904819 (bytes)
+#
+# Supported resources.limits.memory units for percentage mode:
+# Ki, Mi, Gi, Ti, Pi, Ei, K, M, G, T, P, E (integer quantities)
+# If memory limit is missing/unsupported, no computed GOMEMLIMIT is injected.
+goMemLimitPercent: 70  # Percentage of resources.limits.memory used when goMemLimit is empty
+goMemLimit: ""         # Explicit GOMEMLIMIT value (for example 500MiB); overrides goMemLimitPercent
+
+# Environment variables (alternative to flags, also for secrets)
+# Use this for secrets or env-based integration config when you don't want
+# sensitive values embedded directly in extraArgs.
+env: []
+  # - name: VL_BACKEND_URL
+  #   value: "http://victorialogs:9428"
+  # - name: TENANT_MAP
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: tenant-config
+  #       key: tenant-map
+  # - name: OTLP_ENDPOINT
+  #   value: "http://otel-collector:4318/v1/metrics"
+  # - name: LABEL_STYLE
+  #   value: "underscores"
+  # - name: FIELD_MAPPING
+  #   valueFrom:
+  #     configMapKeyRef:
+  #       name: loki-vl-proxy-config
+  #       key: field-mapping
+
+# OpenTelemetry resource attribute defaults for Kubernetes.
+# When enabled, the chart injects:
+# - OTEL_SERVICE_INSTANCE_ID from pod name
+# - OTEL_SERVICE_NAMESPACE from pod namespace
+# This improves per-pod metric visibility in OTLP pipelines without extra RBAC.
+otelResourceAttributes:
+  injectFromPod: true
+
+envFrom: []
+  # - secretRef:
+  #     name: loki-vl-proxy-env
+  # - configMapRef:
+  #     name: loki-vl-proxy-config
+
+# Extra manifests rendered with full Helm chart context.
+# Each entry may be either:
+# - a YAML object/map
+# - a templated YAML string using Helm expressions
+# Rendered objects are emitted as standalone resources.
+customManifests: []
+  # - apiVersion: external-secrets.io/v1beta1
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: '{{ include "loki-vl-proxy.fullname" . }}-env'
+  #   spec: {}
+  # - |
+  #   apiVersion: v1
+  #   kind: ConfigMap
+  #   metadata:
+  #     name: {{ include "loki-vl-proxy.fullname" . }}-extra
+  #   data:
+  #     example: "value"
+
+# --- PrometheusRule (alert rules for Prometheus Operator) ---
+# Base rules source:
+# - canonical repo asset: /alerting/loki-vl-proxy-prometheusrule.yaml
+# - chart copy consumed by templates: charts/loki-vl-proxy/alerting/loki-vl-proxy-prometheusrule.yaml
+# Keep both files aligned with: ./scripts/ci/sync_observability_assets.sh
+prometheusRule:
+  enabled: false
+  namespace: ""
+  labels: {}
+  # Base URL used by alert annotations.runbook_url.
+  # Each alert appends its own runbook filename.
+  runbookBaseUrl: "https://github.com/ReliablyObserve/Loki-VL-proxy/blob/main/docs/runbooks"
+  # Standardized labels merged directly into each base rule for Alertmanager/vmalert routing.
+  standardLabels:
+    team: "sre"
+    owner: "reliablyobserve"
+    source: "vmalert"
+    managedBy: "helm"
+  additionalRules: []
+
+# --- Grafana Dashboard (auto-provisioned via ConfigMap) ---
+# Dashboard sources:
+# - canonical repo assets: /dashboard/*.json
+# - chart copies consumed by templates: charts/loki-vl-proxy/dashboards/*.json
+# Keep both files aligned with: ./scripts/ci/sync_observability_assets.sh
+grafanaDashboard:
+  enabled: false
+  namespace: ""
+  folder: "Infrastructure"
+  labels:
+    grafana_dashboard: "1"
+
+# --- Service Account ---
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+  automountServiceAccountToken: false
+
+# --- Service ---
+# Frontend service exposed to Grafana / clients.
+# The proxy itself always listens on container port 3100 by default.
+service:
+  type: ClusterIP
+  port: 3100
+  annotations: {}
+  labels: {}
+  # Service traffic preference (Kubernetes Service .spec.trafficDistribution).
+  # Supported values:
+  # - PreferSameZone
+  # - PreferSameNode
+  # - PreferClose (deprecated alias for PreferSameZone)
+  trafficDistribution: ""
+
+# Headless peer-discovery service used by StatefulSet / peerCache DNS mode.
+peerService:
+  annotations: {}
+  labels: {}
+  # Service traffic preference (Kubernetes Service .spec.trafficDistribution).
+  # Supported values:
+  # - PreferSameZone
+  # - PreferSameNode
+  # - PreferClose (deprecated alias for PreferSameZone)
+  trafficDistribution: ""
+
+# --- ServiceMonitor (Prometheus Operator) ---
+# Disabled by default to keep the chart generic outside Prometheus-Operator clusters.
+serviceMonitor:
+  enabled: false
+  namespace: ""
+  annotations: {}
+  interval: "30s"
+  scrapeTimeout: "10s"
+  labels: {}
+  relabelings: []
+  metricRelabelings: []
+
+# --- Ingress ---
+# Optional ingress for the Loki-compatible HTTP API.
+# Disabled by default because many fleets use internal service discovery,
+# Gateway API, or platform-specific ingress composition.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+    # nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+  hosts:
+    - host: loki-vl-proxy.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+    # - secretName: loki-vl-proxy-tls
+    #   hosts:
+    #     - loki-vl-proxy.local
+
+# --- Resources ---
+# Defaults are small and intended for development or light shared use.
+# For production, raise both memory and cpu based on request rate and cache size.
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+# --- Probes ---
+# Default probe endpoints:
+# - liveness:  /alive  (process is running)
+# - readiness: /ready  (backend + circuit-breaker checks)
+# - startup:   /health (basic process health)
+# Startup probe is disabled by default because the proxy starts quickly in the
+# common in-memory-cache case; enable it for slower cold starts.
+probe:
+  liveness:
+    enabled: true
+    path: /alive
+    initialDelaySeconds: 5
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+  readiness:
+    enabled: true
+    path: /ready
+    initialDelaySeconds: 3
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+    successThreshold: 1
+  startup:
+    enabled: false
+    path: /health
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 30
+
+# --- Pod Disruption Budget ---
+# Recommended whenever replicaCount > 1 or HPA is enabled.
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+  # maxUnavailable: 1
+
+# --- Horizontal Pod Autoscaler ---
+# When enabled, the chart omits spec.replicas from the workload and HPA becomes
+# the source of truth for desired pod count.
+# Works with both Deployment and StatefulSet modes.
+horizontalPodAutoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+# --- Network Policy ---
+networkPolicy:
+  enabled: false
+  # Allow ingress from Grafana and other datasource consumers
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: grafana
+      ports:
+        - port: 3100
+          protocol: TCP
+  # Allow egress to VictoriaLogs backend
+  egress:
+    - to: []
+      ports:
+        - port: 9428
+          protocol: TCP
+    # Allow DNS
+    - to: []
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+
+# --- Pod Security ---
+# Secure-by-default baseline.
+# Override only if your platform requires different UID/GID/fsGroup handling.
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  fsGroup: 65534
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  runAsNonRoot: true
+  runAsUser: 65534
+
+# --- Scheduling ---
+# Empty by default so the chart remains portable.
+# Fill these in from the platform repo when you need dedicated nodes or spread rules.
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+  # podAntiAffinity:
+  #   preferredDuringSchedulingIgnoredDuringExecution:
+  #     - weight: 100
+  #       podAffinityTerm:
+  #         topologyKey: kubernetes.io/hostname
+  #         labelSelector:
+  #           matchLabels:
+  #             app.kubernetes.io/name: loki-vl-proxy
+
+topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: ScheduleAnyway
+  #   labelSelector:
+  #     matchLabels:
+  #       app.kubernetes.io/name: loki-vl-proxy
+
+priorityClassName: ""
+
+# --- Labels & Annotations ---
+# podAnnotations/podLabels apply to pods only.
+# extraLabels are chart-wide object labels added to most rendered resources.
+podAnnotations: {}
+podLabels: {}
+extraLabels: {}
+
+# --- Lifecycle ---
+terminationGracePeriodSeconds: 30
+lifecycle: {}
+  # preStop:
+  #   exec:
+  #     command: ["/bin/sh", "-c", "sleep 5"]
+
+# --- Additional containers/volumes ---
+# Escape hatches for sidecars, init containers, extra config volumes, and
+# custom mounts. Keep these empty unless your platform needs them.
+initContainers: []
+extraContainers: []
+extraVolumes: []
+extraVolumeMounts: []
+
+# --- System metrics (/proc) ---
+# When enabled, mount host /proc read-only and point the proxy at that mount
+# so CPU/memory/disk/network/PSI metrics reflect node-level context.
+# Enabled by default to keep system-resource panels/alerts functional out of the box.
+# Disable only if your platform policy disallows hostPath mounts.
+systemMetrics:
+  hostProc:
+    enabled: true
+    mountPath: /host/proc
+
+# --- Gateway API HTTPRoute (traffic distribution) ---
+# Optional Gateway API exposure instead of Ingress.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+    # - name: my-gateway
+    #   namespace: gateway-system
+  hostnames: []
+    # - loki-vl-proxy.example.com
+  weight: 100  # for canary/weighted routing
+
+# --- Peer Cache (distributed L1.5 cache across replicas) ---
+# Disabled by default.
+# Enable this when you run multiple replicas and want cache sharing across pods.
+# With discovery=dns, the chart creates a headless service and injects the
+# peer-discovery flags automatically. This is the preferred mode for HPA.
+# When enabled, owner write-through is on by default (`peer-write-through=true`),
+# so non-owner pods can warm owner shards under skewed traffic.
+peerCache:
+  enabled: false
+  # Discovery: "dns" (headless service, recommended) or "static" (explicit peers list)
+  discovery: "dns"
+  # Optional DNS service name used for peer discovery.
+  # Does NOT change StatefulSet spec.serviceName (that is controlled by workload.statefulSet.serviceName).
+  # Empty = reuse StatefulSet headless service.
+  serviceName: ""
+  # Static peer addresses in host:port form (if discovery=static)
+  peers: []
+    # - "proxy-0.proxy-peers:3100"
+    # - "proxy-1.proxy-peers:3100"
+
+# --- Disk cache persistent volume ---
+# Persistence is off by default.
+# Behavior by mode:
+# - Deployment + persistence.enabled=true:
+#   creates one PVC (or mounts persistence.existingClaim if set)
+# - StatefulSet + persistence.enabled=true:
+#   creates volumeClaimTemplates for per-pod cache storage
+# If extraArgs.disk-cache-path is not set, the chart injects one automatically
+# using mountPath + fileName.
+persistence:
+  enabled: false
+  # Existing PVC to mount instead of creating a new one.
+  # Primarily useful for Deployment mode.
+  existingClaim: ""
+  accessMode: ReadWriteOnce
+  size: 10Gi
+  storageClass: ""  # e.g., "gp3", "st1" for AWS
+  # Cache directory mounted into the container.
+  mountPath: /cache
+  # File used for the proxy's bbolt disk cache inside mountPath.
+  fileName: proxy.db
+  annotations: {}
+  # Extra claim templates appended only in StatefulSet mode.
+  # Useful for separate WAL/buffer/storage volumes managed by the same chart.
+  extraVolumeClaimTemplates: []
+
+# Guardrail for immutable StatefulSet fields.
+# Enabled by default to fail early during helm upgrade when live StatefulSet
+# immutable fields diverge from desired chart values.
+statefulSetImmutableGuard:
+  enabled: true
