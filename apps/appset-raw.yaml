@@ -46,3 +46,4 @@ spec:
         {{ $k }}: '{{ $v }}'
         {{- end }}
     {{- end }}
+  preserveResourcesOnDeletion: true

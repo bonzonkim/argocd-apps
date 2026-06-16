@@ -69,3 +69,4 @@ spec:
           {{- end }}
       {{- end }}
     {{- end }}
+  preserveResourcesOnDeletion: true
