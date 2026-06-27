@@ -22,3 +22,6 @@ server:
         secretName: k8s-bumgu-com-tls
   extraArgs:
     - --insecure
+repoServer:
+  livenessProbe:
+    enabled: false

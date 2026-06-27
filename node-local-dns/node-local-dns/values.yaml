@@ -160,9 +160,9 @@ dashboard:
 resources:
   requests:
     cpu: 25m
-    memory: 128Mi
+    memory: 256Mi
   limits:
-    memory: 128Mi
+    memory: 256Mi
 
 # -- Resize policy for in-place pod vertical scaling.
 # [Container resize policies](https://kubernetes.io/docs/tasks/configure-pod-container/resize-container-resources/)
