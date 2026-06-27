@@ -5,7 +5,8 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
-  preserveResourcesOnDeletion: true
+  syncPolicy:
+    preserveResourcesOnDeletion: true
 
   generators:
     - git:
@@ -46,4 +47,3 @@ spec:
         {{ $k }}: '{{ $v }}'
         {{- end }}
     {{- end }}
-  preserveResourcesOnDeletion: true
