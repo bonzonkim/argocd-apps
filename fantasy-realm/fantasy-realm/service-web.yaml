@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fantasy-realm-web-service
+  namespace: fantasy-realm
+spec:
+  selector:
+    app: fantasy-realm-web
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http

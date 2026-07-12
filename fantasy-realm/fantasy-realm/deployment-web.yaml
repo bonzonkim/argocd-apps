@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fantasy-realm-web-deployment
+  namespace: fantasy-realm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fantasy-realm-web
+  template:
+    metadata:
+      labels:
+        app: fantasy-realm-web
+    spec:
+      containers:
+        - name: fantasy-realm-web
+          image: ghcr.io/bonzonkim/fantasy-realm/fantasy-realm:1.0.0
+          imagePullPolicy: Always
+          command:
+            - pnpm
+          args:
+            - start:web
+          ports:
+            - name: http
+              containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+      imagePullSecrets:
+        - name: fantasy-realm-packages

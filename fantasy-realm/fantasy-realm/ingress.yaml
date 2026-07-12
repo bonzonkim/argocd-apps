@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fantasy-realm-ingress
+  namespace: fantasy-realm
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: fr.k8s.bumgu.com
+      http:
+        paths:
+          - path: /socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: fantasy-realm-server-service
+                port:
+                  number: 3001
+          - path: /healthz
+            pathType: Prefix
+            backend:
+              service:
+                name: fantasy-realm-server-service
+                port:
+                  number: 3001
+          - path: /metrics
+            pathType: Prefix
+            backend:
+              service:
+                name: fantasy-realm-server-service
+                port:
+                  number: 3001
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fantasy-realm-web-service
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - fr.k8s.bumgu.com
+      secretName: k8s-bumgu-com-tls
