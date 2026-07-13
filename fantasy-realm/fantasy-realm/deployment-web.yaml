@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: fantasy-realm-web
-          image: ghcr.io/bonzonkim/fantasy-realm/fantasy-realm:1.0.0
+          image: ghcr.io/bonzonkim/fantasy-realm/fantasy-realm:1.0.1
           imagePullPolicy: Always
           command:
             - pnpm
