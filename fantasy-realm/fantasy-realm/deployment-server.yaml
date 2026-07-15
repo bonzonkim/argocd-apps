@@ -18,9 +18,9 @@ spec:
           image: ghcr.io/bonzonkim/fantasy-realm/fantasy-realm:1.0.1
           imagePullPolicy: Always
           command:
-            - pnpm
+            - ./node_modules/.bin/tsx
           args:
-            - start:server
+            - apps/server/src/index.ts
           env:
             - name: PORT
               value: "3001"

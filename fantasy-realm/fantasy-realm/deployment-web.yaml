@@ -18,9 +18,13 @@ spec:
           image: ghcr.io/bonzonkim/fantasy-realm/fantasy-realm:1.0.1
           imagePullPolicy: Always
           command:
-            - pnpm
+            - ./apps/web/node_modules/.bin/next
           args:
-            - start:web
+            - start
+            - -H
+            - 0.0.0.0
+            - -p
+            - "3000"
           ports:
             - name: http
               containerPort: 3000
