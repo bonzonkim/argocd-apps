@@ -1,4 +1,5 @@
 resources:
+  - certificate.yaml
   - deployment-redis.yaml
   - service-redis.yaml
   - deployment-server.yaml

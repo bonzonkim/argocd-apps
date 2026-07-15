@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: fr.k8s.bumgu.com
+    - host: fr.bumgu.com
       http:
         paths:
           - path: /socket.io
@@ -39,5 +39,5 @@ spec:
                   number: 3000
   tls:
     - hosts:
-        - fr.k8s.bumgu.com
-      secretName: k8s-bumgu-com-tls
+        - fr.bumgu.com
+      secretName: fantasy-realm-bumgu-com-tls

@@ -25,7 +25,7 @@ spec:
             - name: PORT
               value: "3001"
             - name: WEB_ORIGIN
-              value: "https://fr.k8s.bumgu.com"
+              value: "https://fr.bumgu.com"
             - name: REDIS_URL
               value: "redis://fantasy-realm-redis-service:6379"
           ports:
