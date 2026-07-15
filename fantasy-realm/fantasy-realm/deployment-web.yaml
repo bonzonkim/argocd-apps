@@ -17,8 +17,9 @@ spec:
         - name: fantasy-realm-web
           image: ghcr.io/bonzonkim/fantasy-realm/fantasy-realm:1.0.1
           imagePullPolicy: Always
+          workingDir: /app/apps/web
           command:
-            - ./apps/web/node_modules/.bin/next
+            - ./node_modules/.bin/next
           args:
             - start
             - -H
