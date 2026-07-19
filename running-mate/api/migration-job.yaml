@@ -29,7 +29,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: migrate
-          image: ghcr.io/bonzonkim/running-mate-api:0.1.0
+          image: ghcr.io/bonzonkim/running-mate-api:0.2.0
           imagePullPolicy: IfNotPresent
           command: ["/migrate", "up"]
           env:
