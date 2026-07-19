@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: running-mate-api-config
+  namespace: running-mate
+  labels:
+    app.kubernetes.io/name: running-mate-api
+data:
+  PORT: "8080"
+  # Replace these public provider identifiers during environment promotion.
+  GOOGLE_CLIENT_ID: replace-with-google-client-id
+  APPLE_CLIENT_ID: replace-with-apple-service-id
+  TRUSTED_PROXY_CIDRS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+  MAINTENANCE_MODE: "false"
+  ACCESS_TTL: 15m
+  REFRESH_TTL: 720h

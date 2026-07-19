@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: running-mate-api
+  namespace: running-mate
+  labels:
+    app.kubernetes.io/name: running-mate-api
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: running-mate-api.bumgu.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: running-mate-api
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - running-mate-api.bumgu.com
+      secretName: running-mate-api-bumgu-com-tls
