@@ -1,0 +1,20 @@
+{
+  "appName": "running-mate-postgresql",
+  "chart": "postgresql",
+  "repoURL": "registry-1.docker.io/bitnamicharts",
+  "targetRevision": "16.7.27",
+  "releaseName": "running-mate-postgresql",
+  "namespace": "running-mate",
+  "sourceType": "helm",
+  "ignoreDifferences": [
+    {
+      "group": "",
+      "kind": "Secret",
+      "name": "running-mate-postgresql",
+      "jsonPointers": [
+        "/data/postgres-password",
+        "/data/password"
+      ]
+    }
+  ]
+}

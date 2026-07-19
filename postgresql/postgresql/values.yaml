@@ -1,0 +1,38 @@
+architecture: standalone
+
+auth:
+  database: running_mate
+  username: running_mate
+  # Bitnami generates and stores the password in the release Secret.
+  # Never commit auth.postgresPassword or auth.password here.
+
+primary:
+  persistence:
+    enabled: true
+    size: 10Gi
+  service:
+    ports:
+      postgresql: 5432
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+  networkPolicy:
+    enabled: true
+    # Permit the future API service and migration jobs in this namespace,
+    # while keeping the database inaccessible from other namespaces.
+    allowExternal: false
+    ingressNSMatchLabels:
+      kubernetes.io/metadata.name: running-mate
+
+readReplicas:
+  replicaCount: 0
+
+metrics:
+  enabled: false
+
+volumePermissions:
+  enabled: false
