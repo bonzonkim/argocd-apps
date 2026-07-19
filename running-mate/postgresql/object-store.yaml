@@ -1,0 +1,19 @@
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: running-mate-backups
+  namespace: running-mate
+spec:
+  configuration:
+    destinationPath: s3://running-mate-postgresql-backups/production
+    endpointURL: https://s3.ap-northeast-2.amazonaws.com
+    s3Credentials:
+      accessKeyId:
+        name: running-mate-backup-s3
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: running-mate-backup-s3
+        key: ACCESS_SECRET_KEY
+    wal:
+      compression: gzip
+  retentionPolicy: 7d

@@ -1,0 +1,35 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: running-mate-postgresql
+  namespace: running-mate
+  labels:
+    app.kubernetes.io/name: running-mate-postgresql
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.10-standard-trixie
+  enableSuperuserAccess: false
+  bootstrap:
+    initdb:
+      database: running_mate
+      owner: running_mate
+      dataChecksums: true
+  storage:
+    storageClass: local-path
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  postgresql:
+    parameters:
+      max_connections: "100"
+      shared_buffers: 128MB
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: running-mate-backups
