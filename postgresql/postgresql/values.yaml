@@ -1,5 +1,13 @@
 architecture: standalone
 
+# The original Bitnami tag was removed from the main repository. Keep the
+# PostgreSQL 17 image family for the existing PVC by using the maintained
+# legacy repository until the planned CNPG migration is completed.
+image:
+  registry: docker.io
+  repository: bitnamilegacy/postgresql
+  tag: 17.6.0-debian-12-r4
+
 auth:
   database: running_mate
   username: running_mate
