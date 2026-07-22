@@ -4,6 +4,7 @@ kind: Kustomization
 # config.json is consumed only by the ApplicationSet generator. Listing the
 # Kubernetes resources explicitly keeps it out of Argo CD's manifest stream.
 resources:
+  - service-account.yaml
   - object-store.yaml
   - cluster.yaml
   - network-policy.yaml
