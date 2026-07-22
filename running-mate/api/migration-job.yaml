@@ -21,6 +21,8 @@ spec:
     spec:
       restartPolicy: Never
       terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+        - name: running-mate-packages
       securityContext:
         runAsNonRoot: true
         runAsUser: 65532
