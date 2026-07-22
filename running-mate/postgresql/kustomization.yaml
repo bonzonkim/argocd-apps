@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# config.json is consumed only by the ApplicationSet generator. Listing the
+# Kubernetes resources explicitly keeps it out of Argo CD's manifest stream.
+resources:
+  - object-store.yaml
+  - cluster.yaml
+  - network-policy.yaml
+  - scheduled-backup.yaml
