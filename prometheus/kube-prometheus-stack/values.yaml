@@ -17,3 +17,9 @@ prometheus:
       matchLabels:
         release: kube-prometheus-stack
     ruleNamespaceSelector: {}
+    additionalScrapeConfigs:
+      - job_name: b9
+        static_configs:
+          - targets: ["100.95.215.51"]
+            lables:
+              alias: mac
