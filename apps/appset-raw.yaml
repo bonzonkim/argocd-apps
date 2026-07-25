@@ -5,45 +5,26 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
   syncPolicy:
     preserveResourcesOnDeletion: true
-
   generators:
     - git:
-        repoURL: 'https://github.com/bonzonkim/argocd-apps'
+        repoURL: https://github.com/bonzonkim/argocd-apps
         revision: main
         files:
-          - path: '*/*/config.json'
-        values:
-          path: '{{ trimSuffix "/config.json" .path.path }}'
+          - path: "*/*/application.yaml"
       selector:
         matchLabels:
-          sourceType: raw
-
+          metadata.labels.source-type: raw
   template:
     metadata:
-      name: '{{ .appName }}'
+      name: "{{ .metadata.name }}"
     spec:
-      project: default
-      source:
-        repoURL: 'https://github.com/bonzonkim/argocd-apps'
-        targetRevision: main
-        path: '{{ .values.path }}'
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: '{{ default (index (splitList "/" .values.path) 0) .namespace }}'
-      syncPolicy:
-        automated:
-          prune: false
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-
+      project: "{{ .spec.project }}"
   templatePatch: |
-    {{- if .annotations }}
-    metadata:
-      annotations:
-        {{- range $k, $v := .annotations }}
-        {{ $k }}: '{{ $v }}'
-        {{- end }}
-    {{- end }}
+    {{- $metadata := deepCopy .metadata }}
+    {{- $spec := deepCopy .spec }}
+    {{- $_ := unset $spec "project" }}
+    {{- dict "metadata" $metadata "spec" $spec | mustToPrettyJson }}

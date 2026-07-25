@@ -5,68 +5,26 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
   syncPolicy:
     preserveResourcesOnDeletion: true
-
   generators:
     - git:
-        repoURL: 'https://github.com/bonzonkim/argocd-apps'
+        repoURL: https://github.com/bonzonkim/argocd-apps
         revision: main
         files:
-          - path: '*/*/config.json'
-        values:
-          path: '{{ trimSuffix "/config.json" .path.path }}'
+          - path: "*/*/application.yaml"
       selector:
         matchLabels:
-          sourceType: helm
-
+          metadata.labels.source-type: helm
   template:
     metadata:
-      name: '{{ .appName }}'
+      name: "{{ .metadata.name }}"
     spec:
-      project: default
-
-      sources:
-        - repoURL: '{{ .repoURL }}'
-          chart: '{{ .chart }}'
-          targetRevision: '{{ .targetRevision }}'
-          helm:
-            releaseName: '{{ default .chart .releaseName }}'
-            ignoreMissingValueFiles: true
-            valueFiles:
-              - '$values/{{ .values.path }}/values.yaml'
-        - repoURL: 'https://github.com/bonzonkim/argocd-apps'
-          targetRevision: main
-          ref: values
-      
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: '{{ .namespace }}'
-      
-      syncPolicy:
-        automated:
-          prune: false
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-          - ServerSideApply=true
-
-  # config.json에 ignoreDifferences 설정이 있을 경우에만 렌더링됩니다.
+      project: "{{ .spec.project }}"
   templatePatch: |
-    {{- if .ignoreDifferences }}
-    spec:
-      ignoreDifferences:
-      {{- range .ignoreDifferences }}
-        - group: '{{ default "" .group }}'
-          kind: '{{ .kind }}'
-          {{- if .name }}
-          name: '{{ .name }}'
-          {{- end }}
-          {{- if .jsonPointers }}
-          jsonPointers:
-          {{- range .jsonPointers }}
-            - '{{ . }}'
-          {{- end }}
-          {{- end }}
-      {{- end }}
-    {{- end }}
+    {{- $metadata := deepCopy .metadata }}
+    {{- $spec := deepCopy .spec }}
+    {{- $_ := unset $spec "project" }}
+    {{- dict "metadata" $metadata "spec" $spec | mustToPrettyJson }}

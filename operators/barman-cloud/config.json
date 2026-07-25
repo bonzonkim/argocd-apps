@@ -1,8 +1,0 @@
-{
-  "appName": "barman-cloud-plugin",
-  "namespace": "cnpg-system",
-  "repoURL": "https://cloudnative-pg.github.io/charts",
-  "chart": "plugin-barman-cloud",
-  "targetRevision": "0.7.0",
-  "sourceType": "helm"
-}

@@ -1,8 +1,0 @@
-{
-  "appName": "cloudnative-pg",
-  "namespace": "cnpg-system",
-  "repoURL": "https://cloudnative-pg.github.io/charts",
-  "chart": "cloudnative-pg",
-  "targetRevision": "0.29.0",
-  "sourceType": "helm"
-}
