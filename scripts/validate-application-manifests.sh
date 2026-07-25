@@ -64,7 +64,7 @@ while IFS= read -r file; do
     .spec.syncPolicy.automated.selfHeal == true
   ' "$file" >/dev/null
 
-  if yq -e '.metadata.finalizers[]? == "resources-finalizer.argocd.argoproj.io"' "$file" >/dev/null; then
+  if yq -e '.metadata.finalizers[]? == "resources-finalizer.argocd.argoproj.io"' "$file" >/dev/null 2>&1; then
     echo "$file must not use the resources finalizer" >&2
     exit 1
   fi
