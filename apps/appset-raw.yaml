@@ -23,6 +23,9 @@ spec:
       name: "{{ .metadata.name }}"
     spec:
       project: "{{ .spec.project }}"
+      destination:
+        server: "{{ .spec.destination.server }}"
+        namespace: "{{ .spec.destination.namespace }}"
   templatePatch: |
     {{- $metadata := deepCopy .metadata }}
     {{- $spec := deepCopy .spec }}

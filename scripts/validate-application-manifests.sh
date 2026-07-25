@@ -334,6 +334,8 @@ check_appset() {
         strenv(EXPECTED_SOURCE_TYPE) and
       .spec.template.metadata.name == "{{ .metadata.name }}" and
       .spec.template.spec.project == "{{ .spec.project }}" and
+      .spec.template.spec.destination.server == "{{ .spec.destination.server }}" and
+      .spec.template.spec.destination.namespace == "{{ .spec.destination.namespace }}" and
       (.spec.templatePatch // "") != "" and
       (.spec.templatePatch | contains("deepCopy")) and
       (.spec.templatePatch | contains("unset")) and
