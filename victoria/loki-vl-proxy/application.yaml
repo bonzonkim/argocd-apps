@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki-vl-proxy
+  namespace: argocd
+  labels:
+    source-type: helm
+spec:
+  project: default
+  sources:
+    - repoURL: ghcr.io/reliablyobserve/charts
+      chart: loki-vl-proxy
+      targetRevision: 1.8.1
+      helm:
+        releaseName: loki-vl-proxy
+        valueFiles:
+          - $values/victoria/loki-vl-proxy/values.yaml
+    - repoURL: https://github.com/bonzonkim/argocd-apps
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: victoria
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
