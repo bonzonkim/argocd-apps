@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: node-local-dns
+  namespace: argocd
+  labels:
+    source-type: helm
+spec:
+  project: default
+  sources:
+    - repoURL: https://raw.githubusercontent.com/deliveryhero/helm-charts/refs/heads/master/
+      chart: node-local-dns
+      targetRevision: 2.7.0
+      helm:
+        releaseName: node-local-dns
+        valueFiles:
+          - $values/node-local-dns/node-local-dns/values.yaml
+    - repoURL: https://github.com/bonzonkim/argocd-apps
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
