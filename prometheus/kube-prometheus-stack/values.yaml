@@ -20,6 +20,6 @@ prometheus:
     additionalScrapeConfigs:
       - job_name: b9
         static_configs:
-          - targets: ["100.95.215.51"]
+          - targets: ["100.95.215.51:9100"]
             lables:
               alias: mac
