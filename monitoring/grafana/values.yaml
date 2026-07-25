@@ -27,6 +27,15 @@ dashboardProviders:
       editable: true
       options:
         path: /var/lib/grafana/dashboards/grafana-dashboards-kubernetes
+    providers:
+    - name: 'grafana-dashboards-node-exporter'
+      orgId: 1
+      folder: 'Default'
+      type: file
+      disableDeletion: true
+      editable: true
+      options:
+        path: /var/lib/grafana/dashboards/grafana-dashboards-node-exporter
 dashboards:
   grafana-dashboards-kubernetes:
     k8s-system-api-server:
@@ -47,5 +56,10 @@ dashboards:
     k8s-views-pods:
       url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
       token: ''
+  grafana-dashboards-node-exporter:
+    node-exporter-full:
+      gnetId: 1860
+      revision: 37
+      datasource: prometheus
 initChownData:
   enabled: false
