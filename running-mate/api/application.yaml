@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: running-mate-api
+  namespace: argocd
+  labels:
+    source-type: raw
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: running-mate-api=ghcr.io/bonzonkim/running-mate-api
+    argocd-image-updater.argoproj.io/running-mate-api.update-strategy: semver
+    argocd-image-updater.argoproj.io/git-branch: main
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/running-mate-api.pull-secret: pullsecret:argocd/running-mate-packages
+    argocd-image-updater.argoproj.io/running-mate-api.allow-tags: 'regexp:^0\.2\.[0-9]+$'
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/bonzonkim/argocd-apps
+    targetRevision: main
+    path: running-mate/api
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: running-mate
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

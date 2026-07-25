@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fantasy-realm
+  namespace: argocd
+  labels:
+    source-type: raw
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: fantasy-realm=ghcr.io/bonzonkim/fantasy-realm/fantasy-realm
+    argocd-image-updater.argoproj.io/fantasy-realm.update-strategy: semver
+    argocd-image-updater.argoproj.io/git-branch: main
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/fantasy-realm.pull-secret: pullsecret:argocd/fantasy-realm-packages
+    argocd-image-updater.argoproj.io/fantasy-realm.allow-tags: 'regexp:^1\.0\.[0-9]+$'
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/bonzonkim/argocd-apps
+    targetRevision: main
+    path: fantasy-realm/fantasy-realm
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fantasy-realm
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

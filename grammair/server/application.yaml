@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grammair-server
+  namespace: argocd
+  labels:
+    source-type: raw
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: grammair-server=ghcr.io/bonzonkim/grammair-server/grammair-server
+    argocd-image-updater.argoproj.io/grammair-server.update-strategy: semver
+    argocd-image-updater.argoproj.io/git-branch: master
+    argocd-image-updater.argoproj.io/grammair-server.pull-secret: pullsecret:argocd/grammair-packages
+    argocd-image-updater.argoproj.io/grammair-server.allow-tags: 'regexp:^1\.0\.[0-9]+$'
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/bonzonkim/argocd-apps
+    targetRevision: main
+    path: grammair/server
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: grammair
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
