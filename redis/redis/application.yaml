@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis
+  namespace: argocd
+  labels:
+    source-type: helm
+spec:
+  project: default
+  source:
+    repoURL: registry-1.docker.io/bitnamicharts
+    chart: redis
+    targetRevision: 23.2.1
+    helm:
+      releaseName: redis
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: redis
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: redis
+      jsonPointers:
+        - /data/redis-password
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
