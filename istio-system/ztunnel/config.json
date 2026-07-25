@@ -1,6 +1,6 @@
 {
   "appName": "ztunnel",
-  "chart": "ztunnel",
+  "chart": "istio/ztunnel",
   "repoURL": "https://istio-release.storage.googleapis.com/charts",
   "targetRevision": "1.30.3",
   "releaseName": "ztunnel",

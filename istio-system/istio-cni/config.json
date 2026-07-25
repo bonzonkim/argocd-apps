@@ -1,6 +1,6 @@
 {
   "appName": "istio-cni",
-  "chart": "istio-cni",
+  "chart": "istio/cni",
   "repoURL": "https://istio-release.storage.googleapis.com/charts",
   "targetRevision": "1.30.3",
   "releaseName": "istio-cni",
