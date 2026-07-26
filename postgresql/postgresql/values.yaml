@@ -30,14 +30,6 @@ primary:
     limits:
       cpu: "1"
       memory: 1Gi
-  networkPolicy:
-    enabled: true
-    # Permit the future API service and migration jobs in this namespace,
-    # while keeping the database inaccessible from other namespaces.
-    allowExternal: false
-    ingressNSMatchLabels:
-      kubernetes.io/metadata.name: running-mate
-
 readReplicas:
   replicaCount: 0
 
