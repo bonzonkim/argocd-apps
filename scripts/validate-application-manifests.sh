@@ -30,7 +30,6 @@ expected_names="$(
     reflector \
     running-mate-api \
     running-mate-postgresql \
-    running-mate-postgresql-cnpg \
     vector \
     victoria-logs \
     ztunnel |
@@ -40,8 +39,8 @@ expected_names="$(
 application_files="$(find . -mindepth 3 -maxdepth 3 -type f -name application.yaml | sort)"
 application_count="$(printf '%s\n' "$application_files" | sed '/^$/d' | wc -l | tr -d ' ')"
 
-if [[ "$application_count" != "23" ]]; then
-  echo "expected 23 application.yaml files, found $application_count" >&2
+if [[ "$application_count" != "22" ]]; then
+  echo "expected 22 application.yaml files, found $application_count" >&2
   exit 1
 fi
 
@@ -112,8 +111,8 @@ while IFS= read -r file; do
   )
 done <<< "$application_files"
 
-if [[ "$helm_count" != "18" || "$raw_count" != "5" ]]; then
-  echo "expected 18 helm and 5 raw Applications; found $helm_count helm and $raw_count raw" >&2
+if [[ "$helm_count" != "18" || "$raw_count" != "4" ]]; then
+  echo "expected 18 helm and 4 raw Applications; found $helm_count helm and $raw_count raw" >&2
   exit 1
 fi
 
@@ -147,8 +146,7 @@ manifest_matrix="$(
     './fantasy-realm/fantasy-realm/application.yaml|raw|fantasy-realm|https://github.com/bonzonkim/argocd-apps||||fantasy-realm||fantasy-realm/fantasy-realm' \
     './grammair/server/application.yaml|raw|grammair-server|https://github.com/bonzonkim/argocd-apps||||grammair||grammair/server' \
     './grammair/web/application.yaml|raw|grammair-web|https://github.com/bonzonkim/argocd-apps||||grammair||grammair/web' \
-    './running-mate/api/application.yaml|raw|running-mate-api|https://github.com/bonzonkim/argocd-apps||||running-mate||running-mate/api' \
-    './running-mate/postgresql/application.yaml|raw|running-mate-postgresql-cnpg|https://github.com/bonzonkim/argocd-apps||||running-mate||running-mate/postgresql'
+    './running-mate/api/application.yaml|raw|running-mate-api|https://github.com/bonzonkim/argocd-apps||||running-mate||running-mate/api'
 )"
 
 while IFS='|' read -r file source_type name repo chart version release destination value_file raw_path; do
@@ -268,19 +266,6 @@ if ! yq -e '
 fi
 
 if ! yq -e '
-  (.spec.ignoreDifferences | length) == 1 and
-  .spec.ignoreDifferences[0].group == "" and
-  .spec.ignoreDifferences[0].kind == "Secret" and
-  .spec.ignoreDifferences[0].name == "running-mate-postgresql" and
-  (.spec.ignoreDifferences[0].jsonPointers | length) == 2 and
-  .spec.ignoreDifferences[0].jsonPointers[0] == "/data/postgres-password" and
-  .spec.ignoreDifferences[0].jsonPointers[1] == "/data/password"
-' postgresql/postgresql/application.yaml >/dev/null; then
-  echo "postgresql/postgresql/application.yaml has unexpected ignoreDifferences" >&2
-  exit 1
-fi
-
-if ! yq -e '
   (.spec.source.helm.valuesObject | keys | length) == 1 and
   .spec.source.helm.valuesObject.installCRDs == true
 ' cert-manager/cert-manager/application.yaml >/dev/null; then
@@ -349,4 +334,4 @@ check_appset() {
 check_appset apps/appset-helm.yaml appset-helm helm
 check_appset apps/appset-raw.yaml appset-raw raw
 
-echo "validated 23 Application manifests: 18 helm, 5 raw"
+echo "validated 22 Application manifests: 18 helm, 4 raw"

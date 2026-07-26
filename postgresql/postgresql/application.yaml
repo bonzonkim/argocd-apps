@@ -21,13 +21,6 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: running-mate
-  ignoreDifferences:
-    - group: ""
-      kind: Secret
-      name: running-mate-postgresql
-      jsonPointers:
-        - /data/postgres-password
-        - /data/password
   syncPolicy:
     automated:
       prune: false

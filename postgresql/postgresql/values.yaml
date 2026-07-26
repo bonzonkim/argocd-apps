@@ -11,8 +11,10 @@ image:
 auth:
   database: running_mate
   username: running_mate
-  # Bitnami generates and stores the password in the release Secret.
-  # Never commit auth.postgresPassword or auth.password here.
+  # Preserve this Secret across Helm syncs. The chart otherwise renders a new
+  # random password on every reconciliation, which diverges from the
+  # credentials persisted in PostgreSQL.
+  existingSecret: running-mate-postgresql
 
 primary:
   persistence:
