@@ -42,7 +42,7 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: running-mate-postgresql-app
+                  name: running-mate-api-database
                   key: uri
             - name: JWT_SIGNING_KEY
               valueFrom:
