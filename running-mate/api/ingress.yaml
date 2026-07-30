@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: running-mate-api.bumgu.com
+    - host: running-mate-api.k8s.bumgu.com
       http:
         paths:
           - path: /
@@ -20,5 +20,5 @@ spec:
                   name: http
   tls:
     - hosts:
-        - running-mate-api.bumgu.com
+        - running-mate-api.k8s.bumgu.com
       secretName: running-mate-api-bumgu-com-tls

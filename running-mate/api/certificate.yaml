@@ -10,6 +10,6 @@ spec:
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
-  commonName: running-mate-api.bumgu.com
+  commonName: running-mate-api.k8s.bumgu.com
   dnsNames:
-    - running-mate-api.bumgu.com
+    - running-mate-api.k8s.bumgu.com
