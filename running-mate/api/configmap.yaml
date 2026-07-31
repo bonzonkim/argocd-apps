@@ -8,7 +8,7 @@ metadata:
 data:
   PORT: "8080"
   # Replace these public provider identifiers during environment promotion.
-  GOOGLE_CLIENT_ID: 303363188228-qciai11nl6u37rjvrmbuf0cilti82nee.apps.googleusercontent.com
+  GOOGLE_CLIENT_ID: 303363188228-5r7at4cuu3nr3j2cuumv1h27pl2remsb.apps.googleusercontent.com
   APPLE_CLIENT_ID: replace-with-apple-service-id
   TRUSTED_PROXY_CIDRS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
   MAINTENANCE_MODE: "false"
