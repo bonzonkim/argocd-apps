@@ -13,6 +13,9 @@ spec:
     targetRevision: 1.30.3
     helm:
       releaseName: istiod
+      parameters:
+        - name: profile
+          value: ambient
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system

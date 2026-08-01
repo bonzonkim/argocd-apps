@@ -15,6 +15,11 @@ spec:
         releaseName: istio-cni
         valueFiles:
           - $values/istio-system/istio-cni/values.yaml
+        parameters:
+          - name: profile
+            value: ambient
+          - name: global.platform
+            value: k3s
     - repoURL: https://github.com/bonzonkim/argocd-apps
       targetRevision: main
       ref: values
