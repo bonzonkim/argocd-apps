@@ -1,2 +1,4 @@
 ambient:
   enabled: true
+
+excludeNamespaces: []
