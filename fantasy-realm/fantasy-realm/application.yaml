@@ -22,6 +22,9 @@ spec:
     server: https://kubernetes.default.svc
     namespace: fantasy-realm
   syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        istio.io/dataplane-mode: ambient
     automated:
       prune: false
       selfHeal: true
