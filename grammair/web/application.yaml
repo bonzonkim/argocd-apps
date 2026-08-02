@@ -18,9 +18,6 @@ spec:
     targetRevision: main
     path: grammair/web
   destination:
-    managedNamespaceMetadata:
-      labels:
-        istio.io/dataplane-mode: ambient
     server: https://kubernetes.default.svc
     namespace: grammair
   syncPolicy:

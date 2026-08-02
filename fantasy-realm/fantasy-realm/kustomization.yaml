@@ -7,3 +7,4 @@ resources:
   - deployment-web.yaml
   - service-web.yaml
   - ingress.yaml
+  - namespace.yaml
